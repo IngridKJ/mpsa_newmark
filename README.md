@@ -92,18 +92,9 @@ Simulation example runscripts are found within [this](./example_runscripts/) fol
 A collection of utility material is found within the [utils](./utils/) directory:
 * [anisotropy mixins](./utils/anisotropy_mixins.py) contains mixins 
 for anisotropic stiffness tensors.
-* [perturbed_geometry_mixins](./utils/perturbed_geometry_mixins.py) contains mixins for
-three types/configurations of perturbed geometry.
 * [stiffness tensors](./utils/stiffness_tensors.py) contains a fourth order stiffness
 tensor object for a transversely isotropic material.
 * [utility functions](./utils/utility_functions.py) contains mostly functions related to
 analytical solution expressions and fetching subdomain-related quantities.
 
 I refer to the files within the directory for more details about the specific contents.
-
-## Tests
-Tests are covering:
-* MPSA-Newmark convergence with homogeneous Dirichlet conditions in 2D and 3D.
-* MPSA-Newmark convergence with absorbing boundary conditions.
-* Construction of the transversely isotropic tensor.
-* The utility function ``inner_domain_cells`` which is used in the construction of the transversely isotropic tensor.
