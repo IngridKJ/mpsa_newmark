@@ -92,7 +92,7 @@ anisotropy_constants = {
 params = {
     "time_manager": time_manager,
     "grid_type": "cartesian",
-    "folder_name": "example_1_heterogeneous",
+    "folder_name": "visualization_example_1_heterogeneous",
     "manufactured_solution": "simply_zero",
     "anisotropy_constants": anisotropy_constants,
     "progressbars": True,
