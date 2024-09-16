@@ -1,6 +1,6 @@
 import numpy as np
 import porepy as pp
-from model_convergence_ABC2 import ABC2Model
+from convergence_analysis_models.model_convergence_ABC2 import ABC2Model
 from porepy.applications.convergence_analysis import ConvergenceAnalysis
 
 
@@ -18,11 +18,13 @@ class MyUnitGeometry:
         self._domain = self.nd_rect_domain(x, y)
 
     def meshing_arguments(self) -> dict:
-        mesh_args: dict[str, float] = {"cell_size": 0.25 / 2**6 / self.units.m}
+        mesh_args: dict[str, float] = {
+            "cell_size": 0.25 / 2 ** (self.refinement) / self.units.m
+        }
         return mesh_args
 
 
-class TemporalRefinementModel(MyUnitGeometry, ABC2Model):
+class SpatialRefinementModel(MyUnitGeometry, ABC2Model):
     def data_to_export(self):
         """Define the data to export to vtu.
 
@@ -55,7 +57,7 @@ class TemporalRefinementModel(MyUnitGeometry, ABC2Model):
 
             data.append((sd, "analytical", u_e))
             data.append((sd, "diff", u_h - u_e))
-            with open(f"error_{self.refinement}_temporal.txt", "a") as file:
+            with open(f"error_{self.refinement}_spatial.txt", "a") as file:
                 file.write(f"{error},")
         return data
 
@@ -70,12 +72,12 @@ def read_float_values(filename) -> np.ndarray:
         return numbers
 
 
-with open(f"temporal_refinement.txt", "w") as file:
+with open(f"spatial_refinement.txt", "w") as file:
     pass
 
 for refinement_coefficient in refinements:
     tf = 15.0
-    time_steps = 15 * (2**refinement_coefficient)
+    time_steps = 900
     dt = tf / time_steps
 
     time_manager = pp.TimeManager(
@@ -90,21 +92,20 @@ for refinement_coefficient in refinements:
     params = {
         "time_manager": time_manager,
         "grid_type": "simplex",
-        "folder_name": "testing_diag_wave",
         "manufactured_solution": "unit_test",
         "progressbars": True,
         "material_constants": material_constants,
     }
-    model = TemporalRefinementModel(params)
+    model = SpatialRefinementModel(params)
     model.refinement = refinement_coefficient
-    with open(f"error_{model.refinement}_temporal.txt", "w") as file:
+    with open(f"error_{model.refinement}_spatial.txt", "w") as file:
         pass
 
     pp.run_time_dependent_model(model, params)
-    error_value = read_float_values(filename=f"error_{model.refinement}_temporal.txt")[
+    error_value = read_float_values(filename=f"error_{model.refinement}_spatial.txt")[
         -1
     ]
-    with open(f"temporal_refinement.txt", "a") as file:
+    with open(f"spatial_refinement.txt", "a") as file:
         file.write(
             f"Refinement coefficient: {refinement_coefficient}. Error value: {error_value}\n"
         )

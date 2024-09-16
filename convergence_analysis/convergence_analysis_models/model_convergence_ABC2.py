@@ -4,7 +4,7 @@ import numpy as np
 import porepy as pp
 import sympy as sym
 
-sys.path.append("../")
+sys.path.append("../../")
 
 from models import DynamicMomentumBalanceABC2
 from utils import u_v_a_wrap

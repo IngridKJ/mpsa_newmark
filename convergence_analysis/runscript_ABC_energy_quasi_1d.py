@@ -5,7 +5,7 @@ import porepy as pp
 
 sys.path.append("../")
 
-from model_convergence_ABC2 import ABC2Model
+from convergence_analysis_models.model_convergence_ABC2 import ABC2Model
 
 
 class BoundaryConditionAndSourceValuesEnergyTest:
