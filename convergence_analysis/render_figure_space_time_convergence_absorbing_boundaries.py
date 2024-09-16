@@ -10,7 +10,7 @@ from porepy.applications.convergence_analysis import ConvergenceAnalysis
 
 from convergence_analysis_models.model_convergence_ABC2 import ABC2Model
 
-filename = "displacement_and_traction_errors_abc.txt"
+filename = "displacement_and_traction_errors_absorbing_boundaries.txt"
 
 class MyUnitGeometry:
     def nd_rect_domain(self, x, y) -> pp.Domain:
