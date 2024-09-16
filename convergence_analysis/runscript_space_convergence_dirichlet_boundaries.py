@@ -14,6 +14,8 @@ from porepy.applications.convergence_analysis import ConvergenceAnalysis
 from convergence_analysis_models.manufactured_solution_dynamic_3D import ManuMechSetup3d
 from utils_convergence_analysis import export_errors_to_txt, run_analysis
 
+filename = "convergence_analysis/displacement_and_traction_errors_space.txt"
+
 time_steps = 150
 tf = 1.0
 dt = tf / time_steps
@@ -57,5 +59,5 @@ print(ooc_setup)
 export_errors_to_txt(
     self=conv_analysis,
     list_of_results=results,
-    file_name="displacement_and_traction_errors_space.txt",
+    file_name=filename,
 )

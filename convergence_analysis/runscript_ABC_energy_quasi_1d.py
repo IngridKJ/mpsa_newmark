@@ -7,6 +7,8 @@ sys.path.append("../")
 
 from convergence_analysis_models.model_convergence_ABC2 import ABC2Model
 
+relative_path = "convergence_analysis/energy_values/"
+
 
 class BoundaryConditionAndSourceValuesEnergyTest:
     def bc_type_mechanics(self, sd: pp.Grid) -> pp.BoundaryConditionVectorial:
@@ -67,7 +69,7 @@ class ExportEnergy:
         data.append((sd, "energy", vel_op_int_val))
         data.append((sd, "velocity", vel))
 
-        with open(f"energy_values_5.txt", "a") as file:
+        with open(f"{relative_path}energy_values_5.txt", "a") as file:
             file.write(f"{np.sum(vel_op_int_val)},")
 
         return data
@@ -104,6 +106,6 @@ params = {
 
 model = EnergyTestModel(params)
 
-with open(f"energy_values_5.txt", "w") as file:
+with open(f"{relative_path}energy_values_5.txt", "w") as file:
     pass
 pp.run_time_dependent_model(model, params)

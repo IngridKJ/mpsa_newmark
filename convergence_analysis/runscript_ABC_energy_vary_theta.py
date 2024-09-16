@@ -8,6 +8,8 @@ sys.path.append("../")
 from models import DynamicMomentumBalanceABC2
 from utils import u_v_a_wrap
 
+relative_path = "convergence_analysis/energy_values/"
+
 
 class BoundaryConditionsEnergyTest:
     def initial_condition_bc(self, bg: pp.BoundaryGrid) -> np.ndarray:
@@ -129,7 +131,10 @@ class ExportEnergy:
         data.append((sd, "energy", vel_op_int_val))
         data.append((sd, "velocity", vel))
 
-        with open(f"energy_values_{self.rotation_angle_index}.txt", "a") as file:
+        with open(
+            f"{relative_path}energy_values_{self.angle_index}.txt",
+            "a",
+        ) as file:
             file.write(f"{np.sum(vel_op_int_val)},")
 
         return data
@@ -177,8 +182,8 @@ for rotation_angle in rotation_angles:
 
     model = EnergyTestModel(params)
     model.rotation_angle_from_list = rotation_angle
-    model.rotation_angle_index = i
-    with open(f"energy_values_{i}.txt", "w") as file:
+    model.angle_index = i
+    with open(f"{relative_path}energy_values_{i}.txt", "w") as file:
         pass
     pp.run_time_dependent_model(model, params)
     i += 1

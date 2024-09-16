@@ -8,6 +8,8 @@ import plotting.plot_utils as pu
 
 import runscript_ABC_energy_vary_dx
 
+relative_path = "convergence_analysis/energy_values/"
+
 # Tuple value in dictionary:
 #   * Legend text
 #   * Color
@@ -22,7 +24,7 @@ index_dx_dict = {
 }
 
 for key, value in index_dx_dict.items():
-    filename = f"energy_values/energy_values_{key}.txt"
+    filename = f"{relative_path}energy_values_{key}.txt"
     energy_values = (
         pu.read_float_values(filename=filename)
         / pu.read_float_values(filename=filename)[0]

@@ -18,10 +18,11 @@ from utils_convergence_analysis import export_errors_to_txt, run_analysis
 
 sys.path.append("../")
 
-from plotting.plot_utils import (draw_multiple_loglog_slopes,
-                                 fetch_numbers_from_file)
+from plotting.plot_utils import draw_multiple_loglog_slopes, fetch_numbers_from_file
 
-time_steps = 150
+filename = "convergence_analysis/displacement_and_traction_errors_space_time.txt"
+
+time_steps = 2
 tf = 1.0
 dt = tf / time_steps
 
@@ -63,12 +64,12 @@ print(ooc_setup)
 export_errors_to_txt(
     self=conv_analysis,
     list_of_results=results,
-    file_name="displacement_and_traction_errors_space_time.txt",
+    file_name=filename,
 )
 
-# Plotting from here and down
+# Plotting from here and downwards.
 
-values = fetch_numbers_from_file("displacement_and_traction_errors_space_time.txt")
+values = fetch_numbers_from_file(filename)
 num_cells = np.array(values["num_cells"]) ** (1 / 3)
 y_disp = values["error_displacement"]
 y_trac = values["error_force"]

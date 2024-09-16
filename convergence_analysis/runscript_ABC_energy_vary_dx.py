@@ -8,6 +8,8 @@ sys.path.append("../")
 from models import DynamicMomentumBalanceABC2
 from utils import u_v_a_wrap
 
+relative_path = "convergence_analysis/energy_values/"
+
 
 class BoundaryConditionsEnergyTest:
     def initial_condition_bc(self, bg: pp.BoundaryGrid) -> np.ndarray:
@@ -129,7 +131,7 @@ class ExportEnergy:
             data.append((sd, "velocity", vel))
 
             with open(
-                f"energy_values/energy_values_{self.cell_size_index}.txt",
+                f"{relative_path}energy_values_{self.index}.txt",
                 "a",
             ) as file:
                 file.write(f"{np.sum(vel_op_int_val)},")
@@ -180,8 +182,8 @@ for dx in dxs:
 
     model = EnergyTestModel(params)
     model.cell_size_value = dx
-    model.cell_size_index = i
-    with open(f"energy_values/energy_values_{i}.txt", "w") as file:
+    model.index = i
+    with open(f"{relative_path}energy_values_{i}.txt", "w") as file:
         pass
     pp.run_time_dependent_model(model, params)
     i += 1
