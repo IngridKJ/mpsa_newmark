@@ -10,7 +10,9 @@ from porepy.applications.convergence_analysis import ConvergenceAnalysis
 
 from convergence_analysis_models.model_convergence_ABC2 import ABC2Model
 
+relative_path = "convergence_analysis/"
 filename = "displacement_and_traction_errors_absorbing_boundaries.txt"
+path = relative_path + filename
 
 class MyUnitGeometry:
     def nd_rect_domain(self, x, y) -> pp.Domain:
@@ -74,12 +76,12 @@ class SpatialRefinementModel(MyUnitGeometry, ABC2Model):
         )
 
         if self.time_manager.final_time_reached():
-            with open(filename, "a") as file:
+            with open(path, "a") as file:
                 file.write(f"{sd.num_cells}, {error_displacement}, {error_traction}\n")
         return data
 
 
-with open(filename, "w") as file:
+with open(path, "w") as file:
     file.write("num_cells, displacement_error, traction_error\n")
 
 refinements = np.array([0, 1, 2, 3, 4])
