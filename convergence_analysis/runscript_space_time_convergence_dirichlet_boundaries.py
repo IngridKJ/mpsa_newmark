@@ -22,7 +22,7 @@ from plotting.plot_utils import draw_multiple_loglog_slopes, fetch_numbers_from_
 
 filename = "convergence_analysis/displacement_and_traction_errors_space_time.txt"
 
-time_steps = 2
+time_steps = 150
 tf = 1.0
 dt = tf / time_steps
 
