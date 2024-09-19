@@ -15,8 +15,17 @@ sys.path.append("../")
 from convergence_analysis_models.manufactured_solution_dynamic_3D import ManuMechSetup3d
 from utils_convergence_analysis import export_errors_to_txt, run_analysis
 
-filename = "convergence_analysis/displacement_and_traction_errors_time.txt"
+# Prepare path for generated output files
+folder_name = "convergence_analysis_results"
+filename = "displacement_and_traction_errors_time.txt"
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+output_dir = os.path.join(script_dir, folder_name)
+os.makedirs(output_dir, exist_ok=True)
+
+filename = os.path.join(output_dir, filename)
+
+# Simulation details from here and onwards
 time_steps = 4
 tf = 1.0
 dt = tf / time_steps
