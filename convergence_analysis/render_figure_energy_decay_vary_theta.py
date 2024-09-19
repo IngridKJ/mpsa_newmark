@@ -8,7 +8,6 @@ import plotting.plot_utils as pu
 
 
 import runscript_ABC_energy_vary_theta
-import runscript_ABC_energy_quasi_1d
 
 relative_path = "convergence_analysis/energy_values/"
 
@@ -23,7 +22,6 @@ index_angle_dict = {
     2: ("$\\theta = \pi/3$", pu.RGB(255, 193, 7), True, False),
     3: ("$\\theta = \pi/4$", pu.RGB(0, 0, 0), True, False),
     4: ("$\\theta = \pi/8$", pu.RGB(216, 27, 96), True, False),
-    5: ("Quasi-1D", pu.RGB(0, 0, 0), False, False),
 }
 
 for key, value in index_angle_dict.items():

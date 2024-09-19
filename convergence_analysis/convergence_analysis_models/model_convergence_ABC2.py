@@ -6,7 +6,7 @@ import sympy as sym
 
 sys.path.append("../../")
 
-from models import DynamicMomentumBalanceABC2
+from models import DynamicMomentumBalanceABC2Linear
 from utils import u_v_a_wrap
 
 
@@ -337,5 +337,5 @@ class FourthOrderTensorUnitTest(object):
 class ABC2Model(
     BoundaryConditionsUnitTest,
     ConstitutiveLawsAndSource,
-    DynamicMomentumBalanceABC2,
+    DynamicMomentumBalanceABC2Linear,
 ): ...
