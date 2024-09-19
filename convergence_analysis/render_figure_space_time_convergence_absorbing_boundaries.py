@@ -6,6 +6,7 @@ import numpy as np
 import porepy as pp
 import utils
 from plotting.plot_utils import draw_multiple_loglog_slopes
+import run_models.run_linear_model as rlm
 from porepy.applications.convergence_analysis import ConvergenceAnalysis
 
 from convergence_analysis_models.model_convergence_ABC2 import ABC2Model
@@ -109,7 +110,7 @@ for refinement_coefficient in refinements:
 
     model = SpatialRefinementModel(params)
     model.refinement = refinement_coefficient
-    pp.run_time_dependent_model(model, params)
+    rlm.run_linear_model(model, params)
 
 
 # Read the file and extract data into numpy arrays

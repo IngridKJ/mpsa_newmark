@@ -5,8 +5,9 @@ import porepy as pp
 
 sys.path.append("../")
 
-from models import DynamicMomentumBalanceABC2
+from models import DynamicMomentumBalanceABC2Linear
 from utils import u_v_a_wrap
+import run_models.run_linear_model as rlm
 
 relative_path = "convergence_analysis/energy_values/"
 
@@ -152,7 +153,7 @@ class EnergyTestModel(
     MyGeometry,
     ExportEnergy,
     RotationAngle,
-    DynamicMomentumBalanceABC2,
+    DynamicMomentumBalanceABC2Linear,
 ): ...
 
 
@@ -185,5 +186,5 @@ for rotation_angle in rotation_angles:
     model.angle_index = i
     with open(f"{relative_path}energy_values_{i}.txt", "w") as file:
         pass
-    pp.run_time_dependent_model(model, params)
+    rlm.run_linear_model(model, params)
     i += 1
