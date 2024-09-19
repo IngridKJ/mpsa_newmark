@@ -1,3 +1,4 @@
+import os
 import sys
 
 import numpy as np
@@ -9,7 +10,10 @@ from models import DynamicMomentumBalanceABC2Linear
 from utils import u_v_a_wrap
 import run_models.run_linear_model as rlm
 
-relative_path = "convergence_analysis/energy_values/"
+folder_name = "energy_values"
+script_dir = os.path.dirname(os.path.abspath(__file__))
+output_dir = os.path.join(script_dir, folder_name)
+os.makedirs(output_dir, exist_ok=True)
 
 
 class BoundaryConditionsEnergyTest:
@@ -132,10 +136,7 @@ class ExportEnergy:
         data.append((sd, "energy", vel_op_int_val))
         data.append((sd, "velocity", vel))
 
-        with open(
-            f"{relative_path}energy_values_{self.angle_index}.txt",
-            "a",
-        ) as file:
+        with open(os.path.join(output_dir, f"energy_values_{i}.txt"), "a") as file:
             file.write(f"{np.sum(vel_op_int_val)},")
 
         return data
@@ -184,7 +185,7 @@ for rotation_angle in rotation_angles:
     model = EnergyTestModel(params)
     model.rotation_angle_from_list = rotation_angle
     model.angle_index = i
-    with open(f"{relative_path}energy_values_{i}.txt", "w") as file:
+    with open(os.path.join(output_dir, f"energy_values_{i}.txt"), "w") as file:
         pass
     rlm.run_linear_model(model, params)
     i += 1

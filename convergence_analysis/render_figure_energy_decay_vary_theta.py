@@ -1,3 +1,4 @@
+import os
 import sys
 
 import numpy as np
@@ -9,7 +10,10 @@ import plotting.plot_utils as pu
 
 import runscript_ABC_energy_vary_theta
 
-relative_path = "convergence_analysis/energy_values/"
+folder_name = "energy_values"
+script_dir = os.path.dirname(os.path.abspath(__file__))
+output_dir = os.path.join(script_dir, folder_name)
+os.makedirs(output_dir, exist_ok=True)
 
 # Tuple value in dictionary:
 #   * Legend text
@@ -25,7 +29,7 @@ index_angle_dict = {
 }
 
 for key, value in index_angle_dict.items():
-    filename = f"{relative_path}energy_values_{key}.txt"
+    filename = os.path.join(output_dir, f"energy_values_{key}.txt")
     energy_values = (
         pu.read_float_values(filename=filename)
         / pu.read_float_values(filename=filename)[0]
