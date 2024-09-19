@@ -12,13 +12,13 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 import numpy as np
 import porepy as pp
-from convergence_analysis_models.manufactured_solution_dynamic_3D import ManuMechSetup3d
-from porepy.applications.convergence_analysis import ConvergenceAnalysis
-from utils_convergence_analysis import export_errors_to_txt, run_analysis
 
 sys.path.append("../")
-
 from plotting.plot_utils import draw_multiple_loglog_slopes, fetch_numbers_from_file
+from porepy.applications.convergence_analysis import ConvergenceAnalysis
+
+from convergence_analysis_models.manufactured_solution_dynamic_3D import ManuMechSetup3d
+from utils_convergence_analysis import export_errors_to_txt, run_analysis
 
 filename = "convergence_analysis/displacement_and_traction_errors_space_time.txt"
 

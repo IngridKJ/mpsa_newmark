@@ -6,11 +6,13 @@ os.environ["NUMEXPR_NUM_THREADS"] = N_THREADS
 os.environ["OMP_NUM_THREADS"] = N_THREADS
 os.environ["OPENBLAS_NUM_THREADS"] = N_THREADS
 
+import sys
 from copy import deepcopy
 
 import porepy as pp
 from porepy.applications.convergence_analysis import ConvergenceAnalysis
 
+sys.path.append("../")
 from convergence_analysis_models.manufactured_solution_dynamic_3D import ManuMechSetup3d
 from utils_convergence_analysis import export_errors_to_txt, run_analysis
 
