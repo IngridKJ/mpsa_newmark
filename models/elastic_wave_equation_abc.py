@@ -195,8 +195,8 @@ class BoundaryAndInitialConditions:
             name=name, data=data, time_step_index=1
         )
 
-        # According to the expression for ABC_2 we have a coefficient 2 in front of the
-        # values u_(n-1) and -0.5 in front of u_(n-2):
+        # According to the expression for the absorbing boundaries, we have a
+        # coefficient 2 in front of the values u_(n-1) and -0.5 in front of u_(n-2):
         displacement_values = 2 * displacement_values_0 - 0.5 * displacement_values_1
 
         # Transposing and reshaping displacement values to prepare for broadcasting
