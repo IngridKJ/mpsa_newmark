@@ -1,16 +1,17 @@
 import os
 import sys
 
+import matplotlib.pyplot as plt
 import numpy as np
 import porepy as pp
 
 sys.path.append("../")
 
-from models import DynamicMomentumBalanceABC2Linear
+import plotting.plot_utils as pu
 import run_models.run_linear_model as rlm
+from models import DynamicMomentumBalanceABC2Linear
 from utils import u_v_a_wrap
 
-# Prepare path for generated output files
 folder_name = "energy_values"
 script_dir = os.path.dirname(os.path.abspath(__file__))
 output_dir = os.path.join(script_dir, folder_name)
@@ -41,7 +42,6 @@ class BoundaryConditionsEnergyTest:
         return vals_0
 
     def initial_condition_value_function(self, bg, t):
-        """Assigning initial bc values."""
         sd = bg.parent
 
         x = sd.face_centers[0, :]
@@ -91,7 +91,6 @@ class BoundaryConditionsEnergyTest:
         )
 
         bc_vals = bc_vals.ravel("F")
-
         bc_vals = bg.projection(self.nd) @ bc_vals.ravel("F")
         return bc_vals
 
@@ -105,39 +104,42 @@ class SourceValuesEnergyTest:
 class MyGeometry:
     def nd_rect_domain(self, x, y) -> pp.Domain:
         box: dict[str, pp.number] = {"xmin": 0, "xmax": x}
-
         box.update({"ymin": 0, "ymax": y})
-
         return pp.Domain(box)
 
     def set_domain(self) -> None:
-        x = 1.0 / self.units.m
-        y = 1.0 / self.units.m
+        x = self.solid.convert_units(1.0, "m")
+        y = self.solid.convert_units(1.0, "m")
         self._domain = self.nd_rect_domain(x, y)
 
     def meshing_arguments(self) -> dict:
-        cell_size = self.solid.convert_units(self.cell_size_value, "m")
+        cell_size = self.solid.convert_units(0.015625, "m")
         mesh_args: dict[str, float] = {"cell_size": cell_size}
         return mesh_args
 
 
 class ExportEnergy:
     def data_to_export(self):
+        """Define the data to export to vtu.
+
+        Returns:
+            list: List of tuples containing the subdomain, variable name,
+            and values to export.
+
+        """
         data = super().data_to_export()
-        for sd in self.mdg.subdomains(dim=self.nd):
-            vel_op = self.velocity_time_dep_array([sd]) * self.velocity_time_dep_array(
-                [sd]
-            )
-            vel_op_int = self.volume_integral(integrand=vel_op, grids=[sd], dim=self.nd)
-            vel_op_int_val = vel_op_int.value(self.equation_system)
+        sd = self.mdg.subdomains(dim=self.nd)[0]
+        vel_op = self.velocity_time_dep_array([sd]) * self.velocity_time_dep_array([sd])
+        vel_op_int = self.volume_integral(integrand=vel_op, grids=[sd], dim=2)
+        vel_op_int_val = vel_op_int.value(self.equation_system)
 
-            vel = self.velocity_time_dep_array([sd]).value(self.equation_system)
+        vel = self.velocity_time_dep_array([sd]).value(self.equation_system)
 
-            data.append((sd, "energy", vel_op_int_val))
-            data.append((sd, "velocity", vel))
+        data.append((sd, "energy", vel_op_int_val))
+        data.append((sd, "velocity", vel))
 
-            with open(os.path.join(output_dir, f"energy_values_{i}.txt"), "a") as file:
-                file.write(f"{np.sum(vel_op_int_val)},")
+        with open(os.path.join(output_dir, f"energy_values_{i}.txt"), "a") as file:
+            file.write(f"{np.sum(vel_op_int_val)},")
 
         return data
 
@@ -145,7 +147,7 @@ class ExportEnergy:
 class RotationAngle:
     @property
     def rotation_angle(self) -> float:
-        return np.pi / 4
+        return self.rotation_angle_from_list
 
 
 class EnergyTestModel(
@@ -157,10 +159,11 @@ class EnergyTestModel(
     DynamicMomentumBalanceABC2Linear,
 ): ...
 
-
-dxs = np.array([1 / 32, 1 / 64, 1 / 128, 1 / 256, 1 / 512])
-i = 8
-for dx in dxs:
+# This is where the simulation actually is run. We loop through different wave rotation
+# angles and run the model class once per angle.
+rotation_angles = np.array([0, np.pi / 6, np.pi / 3, np.pi / 4, np.pi / 8])
+i = 0
+for rotation_angle in rotation_angles:
     tf = 15.0
     time_steps = 300
     dt = tf / time_steps
@@ -183,10 +186,74 @@ for dx in dxs:
     }
 
     model = EnergyTestModel(params)
-    model.cell_size_value = dx
-    model.index = i
-
+    model.rotation_angle_from_list = rotation_angle
+    model.angle_index = i
     with open(os.path.join(output_dir, f"energy_values_{i}.txt"), "w") as file:
         pass
     rlm.run_linear_model(model, params)
     i += 1
+
+# Plotting from here and down
+
+# Tuple value in dictionary:
+#   * Legend text
+#   * Color
+#   * Dashed/not dashed line
+#   * Logarithmic y scale/not logarithmic y scale.
+index_angle_dict = {
+    0: ("$\\theta = 0$", pu.RGB(216, 27, 96), False, False),
+    1: ("$\\theta = \pi/6$", pu.RGB(30, 136, 229), False, False),
+    2: ("$\\theta = \pi/3$", pu.RGB(255, 193, 7), True, False),
+    3: ("$\\theta = \pi/4$", pu.RGB(0, 0, 0), True, False),
+    4: ("$\\theta = \pi/8$", pu.RGB(216, 27, 96), True, False),
+}
+
+for key, value in index_angle_dict.items():
+    filename = os.path.join(output_dir, f"energy_values_{key}.txt")
+    energy_values = (
+        pu.read_float_values(filename=filename)
+        / pu.read_float_values(filename=filename)[0]
+    )
+    final_time = 15
+    time_values = np.linspace(0, final_time, len(energy_values))
+
+    plt.yscale("log" if value[3] else "linear")
+    plt.plot(
+        time_values,
+        energy_values,
+        label=value[0],
+        color=value[1],
+        linestyle="-" if not value[2] else "--",
+    )
+    print(value[0], energy_values[-1] * 100)
+
+plt.axvline(
+    x=10 / np.sqrt(3),
+    ymin=0,
+    ymax=5,
+    color=(0.65, 0.65, 0.65),
+    linestyle="--",
+    linewidth=1,
+)
+plt.axvline(
+    x=10 * np.sqrt(6) / 3,
+    ymin=0,
+    ymax=5,
+    color=(0.65, 0.65, 0.65),
+    linestyle="--",
+    linewidth=1,
+)
+
+plt.axhline(
+    y=0,
+    xmin=0,
+    xmax=12,
+    color=(0, 0, 0),
+    linewidth=0.5,
+)
+
+plt.xlabel("Time [s]", fontsize=12)
+plt.ylabel("$\\frac{E}{E_0}$", fontsize=16)
+plt.title("Energy evolution with respect to time")
+plt.legend()
+plt.show()

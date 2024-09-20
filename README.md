@@ -2,6 +2,8 @@
 This repository contains everything needed to run the simulation examples found in the
 MPSA-Newmark paper.
 
+
+
 ## Models
 The model classes are standardized setups for solving the elastic wave equation with absorbing boundary conditions with PorePy. There are currently two model class setups:
 * [elastic_wave_equation_abc](./models/elastic_wave_equation_abc.py) considers a general
@@ -16,32 +18,19 @@ The model classes are standardized setups for solving the elastic wave equation 
   once. The linear model setup should be used together with the custom run-model
   function which is detailed in the section below.
 
-## Custom solvers and run-functions
-[solvers](./solvers) contains mixins for custom solvers. Specifically, the mixin that is
-there now will allow for PETSc usage whenever that is available. It also takes into
-consideration whether the Jacobian should be assembled or fetched, where the latter is
-the case if
-[elastic_wave_equation_abc_linear](./models/elastic_wave_equation_abc_linear.py) is the
-model setup to be run.
-
-[run_models](./run_models) contains custom run-models functions. In the case of a the
-Jacobian being assembled only once, adaptations were needed to the run-model-function
-which originally lies within PorePy such that the residual was not assembled twice per
-time step.
-
 ## Verification: Convergence and energy decay analyses
 ### Convergence analysis of MPSA-Newmark
 The convergence analyses presented in the article are performed with 
 homogeneous Dirichlet conditions on a 3D simplex grid:
 * Convergence in space and time:
-  * [runscript_convergence_analysis_3D_space_time](./convergence_analysis/runscript_convergence_analysis_3D_space_time.py)
+  * [runscript_space_time_convergence_dirichlet_boundaries](./convergence_analysis/runscript_space_time_convergence_dirichlet_boundaries.py)
 * Convergence in space:
-  * [runscript_convergence_analysis_3D_space](./convergence_analysis/runscript_convergence_analysis_3D_space.py) 
+  * [runscript_space_convergence_dirichlet_boundaries](./convergence_analysis/runscript_space_convergence_dirichlet_boundaries.py) 
 * Convergence in time:
-  * [runscript_convergence_analysis_3D_time](./convergence_analysis/runscript_convergence_analysis_3D_time.py) 
+  * [runscript_time_convergence_dirichlet_boundaries](./convergence_analysis/runscript_time_convergence_dirichlet_boundaries.py) 
 
 All the runscripts utilize
-[manufactured_solution_dynamic_3D](./convergence_analysis/manufactured_solution_dynamic_3D.py)
+[manufactured_solution_dynamic_3D](./convergence_analysis/convergence_analysis_models/manufactured_solution_dynamic_3D.py)
 as the manufactured solution setup.
 
 ### Convergence analysis of MPSA-Newmark with absorbing boundaries
@@ -55,26 +44,20 @@ scripts also render figures of the convergence results.
   * [convergence_model_with_abc2_time](./convergence_analysis/convergence_model_with_abc2_time.py)
 
 All the runscripts utilize
-[model_convergence_ABC2](./convergence_analysis/model_convergence_ABC2.py) as the model class setup. 
+[model_convergence_ABC2](./convergence_analysis/convergence_analysis_models/model_convergence_ABC2.py) as the model class setup. 
 
 ### Energy decay analysis of MPSA-Newmark with absorbing boundaries
 The energy decay analysis is performed both for successive refinement 
 of the grid, as well as for varying wave incidence angles. 
 
 Rendering the figure for:
-* Successive grid refinement is done by running the script
-[render_figure_energy_decay_space_refinement](./convergence_analysis/render_figure_energy_decay_space_refinement.py).
-The script which renders the figure uses the runscript
-[runscript_ABC_energy_vary_dx](./convergence_analysis/runscript_ABC_energy_vary_dx.py)
-for running the simulations.
+* Rendering the figure for successive grid refinement is done by running the script
+[runscript_energy_decay_space_refinement](./convergence_analysis/runscript_energy_decay_space_refinement.py).
 
-* Varying the wave incidence angle, $\theta$, is done by running the script
-[render_figure_energy_decay_vary_theta](./convergence_analysis/render_figure_energy_decay_vary_theta.py).
-The script which renders the figure uses the runscripts
-[runscript_ABC_energy_quasi_1d](./convergence_analysis/runscript_ABC_energy_quasi_1d.py)
-and
-[runscript_ABC_energy_vary_theta](./convergence_analysis/runscript_ABC_energy_vary_theta.py)
-for running the simulations.
+
+* Rendering the figure for changing the wave incidence angle, $\theta$, is done by running the script
+[runscript_energy_decay_vary_theta](./convergence_analysis/runscript_energy_decay_vary_theta.py).
+
 
 ## Simulation examples
 Simulation example runscripts are found within [this](./example_runscripts/) folder.
