@@ -1,6 +1,7 @@
 """Manufactured solution setup for a 3D elastic wave equation.
 
-The setup is an adaptation/extension of a similar setup for poromechanics found within PorePy.
+The setup is an adaptation/extension of a similar setup for poromechanics found within
+PorePy.
 
 """
 
@@ -146,8 +147,8 @@ class ManuMechExactSolution3d:
         ) = symbolic_equation_terms(model=setup, u=u, x=x, y=y, z=z, t=t, is_2D=False)
 
         # Public attributes
-        self.u = u  # displacement
-        self.sigma_total = sigma_total  # elastic stress
+        self.u = u  # Displacement
+        self.sigma_total = sigma_total  # Elastic stress
         self.source_mech = source_mech  # Source term entering the momentum balance
         self.acceleration_term = acceleration_term  # Acceleration term entering mom bal
 

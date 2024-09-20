@@ -19,7 +19,7 @@ from __future__ import annotations
 import logging
 import time
 
-from . import DynamicMomentumBalanceABC2
+from . import DynamicMomentumBalanceABC
 
 logger = logging.getLogger(__name__)
 
@@ -45,5 +45,5 @@ class SolutionStrategyAssembleLinearSystemOnce:
 
 class DynamicMomentumBalanceABC2Linear(
     SolutionStrategyAssembleLinearSystemOnce,
-    DynamicMomentumBalanceABC2,
+    DynamicMomentumBalanceABC,
 ): ...
