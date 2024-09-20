@@ -12,12 +12,13 @@ import run_models.run_linear_model as rlm
 from models import DynamicMomentumBalanceABC2Linear
 from utils import u_v_a_wrap
 
+# Prepare path for generated output files
 folder_name = "energy_values"
 script_dir = os.path.dirname(os.path.abspath(__file__))
 output_dir = os.path.join(script_dir, folder_name)
 os.makedirs(output_dir, exist_ok=True)
 
-
+# Model class for setting up and running the simulation from here and onwards.
 class BoundaryConditionsEnergyTest:
     def initial_condition_bc(self, bg: pp.BoundaryGrid) -> np.ndarray:
         dt = self.time_manager.dt
