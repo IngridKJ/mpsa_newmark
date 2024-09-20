@@ -42,7 +42,7 @@ renders a convergence plot of the results:
 
 
 The runscripts utilize
-[model_convergence_ABC2](./convergence_analysis/convergence_analysis_models/model_convergence_ABC2.py)
+[model_convergence_ABC](./convergence_analysis/convergence_analysis_models/model_convergence_ABC.py)
 as the model class setup. 
 
 ### Energy decay analysis of MPSA-Newmark with absorbing boundaries
