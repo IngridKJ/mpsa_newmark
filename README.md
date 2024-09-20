@@ -2,14 +2,20 @@
 This repository contains everything needed to run the simulation examples found in the
 MPSA-Newmark paper.
 
-All scripts should be run from the mpsa_newmark directory.
+That includes:
+* Runscripts for the convergence and energy decay analyses.
+* Runscripts for all simulation examples.
+* Standardized model class setup for solving the elastic wave equation using PorePy
+  (https://github.com/pmgbergen/porepy).
+* Utility material which is used in the various simulations
+* Additional material: We have included runscripts for separate space and time
+convergence analyses of MPSA-Newmark with Dirichlet boundary conditions.
 
-## Models
-The model classes are standardized setups for solving the elastic wave equation with absorbing boundary conditions with PorePy. There are currently two model class setups:
-* [elastic_wave_equation_abc](./models/elastic_wave_equation_abc.py) considers a general
-  setup for solving the elastic wave equation with absorbing boundaries on all domain
-  sides.
-* [elastic_wave_equation_abc_linear](./models/elastic_wave_equation_abc_linear.py) inherits from [elastic_wave_equation_abc](./models/elastic_wave_equation_abc.py), but makes sure that the Jacobian is only assembled once. For linear problems it is not necessary to assemble the Jacobian every time step, as it is constant.
+## How to use:
+All scripts should be run from the mpsa_newmark directory. An example of how to run a
+script after `cd` into the mpsa_newmark directory is as shown in the following:
+
+`python convergence_analysis/runscript_energy_decay_vary_theta.py`
 
 ## Verification: Convergence and energy decay analyses
 ### Convergence analysis of MPSA-Newmark
@@ -63,3 +69,15 @@ Simulation example runscripts are found within [this](./example_runscripts/) dir
 * The simulation from Example 2, which considers a layered heterogeneous medium with an
   open fracture, is run by
   [runscript_example_2_heterogeneous_fractured_domain](./example_runscripts/runscript_example_2_heterogeneous_fractured_domain.py).
+
+
+## Models
+All the above scripts utilize a common model class for solving the elastic wave
+equation. There are currently two model class setups:
+* [elastic_wave_equation_abc](./models/elastic_wave_equation_abc.py) considers a general
+  setup for solving the elastic wave equation with absorbing boundaries on all domain
+  sides.
+* [elastic_wave_equation_abc_linear](./models/elastic_wave_equation_abc_linear.py)
+  inherits from [elastic_wave_equation_abc](./models/elastic_wave_equation_abc.py), but
+  makes sure that the Jacobian is only assembled once. For linear problems it is not
+  necessary to assemble the Jacobian every time step, as it is constant.
