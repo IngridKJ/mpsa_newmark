@@ -182,7 +182,6 @@ for dx in dxs:
         "manufactured_solution": "diagonal_wave",
         "progressbars": True,
         "material_constants": material_constants,
-        "times_to_export": [],
     }
 
     model = EnergyTestModel(params)

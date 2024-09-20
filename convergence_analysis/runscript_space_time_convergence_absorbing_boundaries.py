@@ -114,7 +114,6 @@ for refinement_coefficient in refinements:
         "manufactured_solution": "unit_test",
         "progressbars": True,
         "material_constants": material_constants,
-        "times_to_export": [],
     }
 
     model = SpatialRefinementModel(params)

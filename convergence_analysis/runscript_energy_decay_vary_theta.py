@@ -184,7 +184,6 @@ for rotation_angle in rotation_angles:
         "manufactured_solution": "diagonal_wave",
         "progressbars": True,
         "material_constants": material_constants,
-        "times_to_export": [],
     }
 
     model = EnergyTestModel(params)
@@ -192,6 +191,7 @@ for rotation_angle in rotation_angles:
     model.angle_index = i
     with open(os.path.join(output_dir, f"energy_values_{i}.txt"), "w") as file:
         pass
+
     rlm.run_linear_model(model, params)
     i += 1
 
