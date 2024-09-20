@@ -43,7 +43,7 @@ class SolutionStrategyAssembleLinearSystemOnce:
         logger.debug(f"\nAssembled linear system in {time.time() - t_0:.2e} seconds.")
 
 
-class DynamicMomentumBalanceABC2Linear(
+class DynamicMomentumBalanceABCLinear(
     SolutionStrategyAssembleLinearSystemOnce,
     DynamicMomentumBalanceABC,
 ): ...

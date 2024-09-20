@@ -9,7 +9,7 @@ sys.path.append("../")
 
 import plotting.plot_utils as pu
 import run_models.run_linear_model as rlm
-from models import DynamicMomentumBalanceABC2Linear
+from models import DynamicMomentumBalanceABCLinear
 from utils import u_v_a_wrap
 
 # Prepare path for generated output files
@@ -158,7 +158,7 @@ class EnergyTestModel(
     MyGeometry,
     ExportEnergy,
     RotationAngle,
-    DynamicMomentumBalanceABC2Linear,
+    DynamicMomentumBalanceABCLinear,
 ): ...
 
 # This is where the simulation actually is run. We loop through different wave rotation

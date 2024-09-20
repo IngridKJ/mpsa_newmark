@@ -14,7 +14,7 @@ import porepy as pp
 
 sys.path.append("../")
 import run_models.run_linear_model as rlm
-from models import DynamicMomentumBalanceABC2Linear
+from models import DynamicMomentumBalanceABCLinear
 from utils.discard_equations_mixins import RemoveFractureRelatedEquationsMomentumBalance
 
 logger = logging.getLogger(__name__)
@@ -157,7 +157,7 @@ class MomentumBalanceModifiedGeometry(
     InitialConditionsAndMaterialProperties,
     MyGeometry,
     RemoveFractureRelatedEquationsMomentumBalance,
-    DynamicMomentumBalanceABC2Linear,
+    DynamicMomentumBalanceABCLinear,
 ): ...
 
 

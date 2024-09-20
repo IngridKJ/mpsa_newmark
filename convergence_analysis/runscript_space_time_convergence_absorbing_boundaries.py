@@ -10,7 +10,9 @@ from plotting.plot_utils import draw_multiple_loglog_slopes
 import run_models.run_linear_model as rlm
 from porepy.applications.convergence_analysis import ConvergenceAnalysis
 
-from convergence_analysis_models.model_convergence_ABC2 import ABC2Model
+from convergence_analysis.convergence_analysis_models.model_convergence_ABC import (
+    ABCModel,
+)
 
 # Prepare path for generated output files
 folder_name = "convergence_analysis_results"
@@ -42,7 +44,7 @@ class MyUnitGeometry:
         return mesh_args
 
 
-class SpatialRefinementModel(MyUnitGeometry, ABC2Model):
+class SpatialRefinementModel(MyUnitGeometry, ABCModel):
     def data_to_export(self):
         data = super().data_to_export()
 
