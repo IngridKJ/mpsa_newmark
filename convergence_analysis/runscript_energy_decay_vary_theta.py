@@ -97,9 +97,10 @@ class BoundaryConditionsEnergyTest:
 
 
 class SourceValuesEnergyTest:
-    def source_values(self, f, sd, t) -> np.ndarray:
+    def evaluate_mechanics_source(self, f: list, sd: pp.Grid, t: float) -> np.ndarray:
         vals = np.zeros((self.nd, sd.num_cells))
         return vals.ravel("F")
+
 
 
 class MyGeometry:

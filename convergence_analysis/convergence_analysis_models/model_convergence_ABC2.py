@@ -262,7 +262,7 @@ class ConstitutiveLawsAndSource:
         force_total_flat: np.ndarray = np.asarray(force_total_fc).ravel("F")
         return force_total_flat
 
-    def source_values(self, f, sd, t) -> np.ndarray:
+    def evaluate_mechanics_source(self, f: list, sd: pp.Grid, t: float) -> np.ndarray:
         vals = np.zeros((self.nd, sd.num_cells))
         return vals.ravel("F")
 
