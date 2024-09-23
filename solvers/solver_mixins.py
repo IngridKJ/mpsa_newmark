@@ -22,7 +22,7 @@ try:
 except ImportError:
     _IS_PETSC4PY_AVAILABLE: bool = False
 else:
-    _IS_TQDM_AVAILABLE = True
+    _IS_PETSC4PY_AVAILABLE = True
 
 logger = logging.getLogger(__name__)
 
