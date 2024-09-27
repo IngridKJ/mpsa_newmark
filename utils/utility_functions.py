@@ -632,9 +632,6 @@ def inner_domain_cells(
     one. I need the cell numbers of the inner cells. Cell indices of the cells in the
     internal domain is returned.
 
-    TODO:
-        * Raise an error if the inner domains are intersecting with the outer domain.
-
     Raises:
         ValueError if the inner domain width exceeds that of the outer domain.
 
