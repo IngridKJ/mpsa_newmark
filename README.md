@@ -32,6 +32,7 @@ assigned some default parameters which lead to less demanding simulations. The p
     The default parameters run the space/time convergence analysis with two refinement
     levels. To reproduce the results which are found in the article:
     * Change the "levels" parameter in line 58 from 2 to 4.
+    * Uncomment lines 108-128 to plot convergence slope triangles. 
 * Convergence in space:
   * [runscript_space_convergence_dirichlet_boundaries](./convergence_analysis/runscript_space_convergence_dirichlet_boundaries.py)
     
