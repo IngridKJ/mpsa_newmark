@@ -98,16 +98,7 @@ params = {
     "progressbars": True,
     "inner_domain_width": 0.5,
     "inner_domain_center": (0.5, 0.5, 0.3),
-    "prepare_simulation": False,
 }
 
 model = MomentumBalanceABCModifiedGeometry(params)
-import time
-
-start = time.time()
-model.prepare_simulation()
-end = time.time() - start
-print("Num dofs system, cartesian", model.equation_system.num_dofs())
-print("Time for prep sim:", end)
-
 rlm.run_linear_model(model, params)
