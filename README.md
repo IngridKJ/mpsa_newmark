@@ -1,11 +1,11 @@
 # mpsa_newmark
-This repository contains everything needed to run the simulation examples found in the
+This repository contains everything needed to reproduce the results found in the
 MPSA-Newmark paper.
 
 That includes:
 * Runscripts for the convergence and energy decay analyses.
 * Runscripts for all simulation examples.
-* Standardized model class setup for solving the elastic wave equation using PorePy
+* Standardized model class setup for solving the elastic wave equation using PorePy.
   (https://github.com/pmgbergen/porepy).
 * Utility material which is used in the various simulations
 * Additional material: We have included runscripts for separate space and time
@@ -34,14 +34,18 @@ assigned some default parameters which lead to less demanding simulations. The p
     * Change the "levels" parameter in line 58 from 2 to 4.
 * Convergence in space:
   * [runscript_space_convergence_dirichlet_boundaries](./convergence_analysis/runscript_space_convergence_dirichlet_boundaries.py)
+    
+    The default parameters run the space convergence analysis with two refinement
+    levels. To produce convergence analysis results with four refinement levels instead
+    of two:
       * Change the "levels" parameter in line 54 from 2 to 4.
 * Convergence in time:
   * [runscript_time_convergence_dirichlet_boundaries](./convergence_analysis/runscript_time_convergence_dirichlet_boundaries.py) 
 
     The default parameters run the time convergence analysis with two refinement levels
-    and a coarser cell size than that found in the article. Note that the coarser grid
-    is not sufficiently fine to observe the second order convergence in time. To
-    reproduce the results from the article:
+    and a cell size coarser than ideal. The coarser grid is not sufficiently fine to
+    observe the second order convergence in time. To reproduce results to observe second
+    order convergence in time:
     * Change the "cell_size" from 0.1 to 0.03125 in line 46.
     * Change the "levels" parameter in line 53 from 2 to 4. 
     
@@ -87,18 +91,24 @@ Varying the wave incidence angle, $\theta$:
 Simulation example runscripts are found within a dedicated [example
 runscripts](./example_runscripts/) directory.
 * The simulation from Example 1.1, which considers a seismic source located inside an
-  inner transversely isotropic domain, is run by
+  inner transversely isotropic domain, can be run by
   [runscript_example_1_1_source_in_inner_domain](./example_runscripts/runscript_example_1_1_source_in_inner_domain.py).
 
-  To reproduce the simulation in the article, change the cell_size from 0.1 to 0.0125 in line 35.
+  * To reproduce the exact simulation in the article, change the cell_size from 0.1 to
+    0.0125 in line 35.
 * The simulation from Example 1.2, which considers a seismic source located outside an
-  inner transversely isotropic domain, is run by
+  inner transversely isotropic domain, can be run by
   [runscript_example_1_2_source_in_outer_domain](./example_runscripts/runscript_example_1_2_source_in_outer_domain.py).
 
-    To reproduce the simulation in the article, change the cell_size from 0.1 to 0.0125 in line 36.
+    * To reproduce the exact simulation in the article, change the cell_size from 0.1 to
+      0.0125 in line 36.
 * The simulation from Example 2, which considers a layered heterogeneous medium with an
   open fracture, is run by
   [runscript_example_2_heterogeneous_fractured_domain](./example_runscripts/runscript_example_2_heterogeneous_fractured_domain.py).
 
-    To reproduce the simulation in the article, change the cell_size from 0.25 to 0.0175
-    in line 151.
+    * To reproduce the simulation in the article, change the cell_size from 0.25 to 0.0175
+    in line 151. 
+    
+    Note: The simulation with a cell size of 0.0175 is time consuming and memory
+    intensive. Be aware that it generates visualization files which require over 20GB of
+    storage.
