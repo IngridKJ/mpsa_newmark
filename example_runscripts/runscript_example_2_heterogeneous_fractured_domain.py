@@ -161,7 +161,7 @@ class MomentumBalanceModifiedGeometry(
 ): ...
 
 
-time_steps = 5
+time_steps = 500
 tf = 0.25
 dt = tf / time_steps
 
@@ -178,22 +178,8 @@ params = {
     "folder_name": "visualization_example_2",
     "manufactured_solution": "simply_zero",
     "progressbars": True,
-    "prepare_simulation": False,
     "petsc_solver_q": True,
 }
 
-print("Simulation started.")
 model = MomentumBalanceModifiedGeometry(params)
-import time
-
-start = time.time()
-model.prepare_simulation()
-end = time.time() - start
-print(f"Num dofs system, {params['grid_type']}: ", model.equation_system.num_dofs())
-print("Time for prepare simulation:", end)
-
 rlm.run_linear_model(model, params)
-
-print("After simulation")
-print("Time for prepare simulation:", end)
-print(f"Num dofs system, {params['grid_type']}: ", model.equation_system.num_dofs())

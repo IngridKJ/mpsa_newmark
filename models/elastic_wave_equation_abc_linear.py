@@ -1,4 +1,4 @@
-"""This file contains a model setup which only assembles the Jacobian once.
+"""This file contains a model setup which facilitates only assembling the Jacobian once.
 
 The default behavior when running PorePy models is that the Jacobian is assembled at
 every time step. This is not necessary for linear problems, where the Jacobian doesn't

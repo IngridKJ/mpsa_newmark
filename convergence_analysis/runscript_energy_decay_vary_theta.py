@@ -18,6 +18,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 output_dir = os.path.join(script_dir, folder_name)
 os.makedirs(output_dir, exist_ok=True)
 
+
 # Model class for setting up and running the simulation from here and onwards.
 class BoundaryConditionsEnergyTest:
     def initial_condition_bc(self, bg: pp.BoundaryGrid) -> np.ndarray:
@@ -102,7 +103,6 @@ class SourceValuesEnergyTest:
         return vals.ravel("F")
 
 
-
 class MyGeometry:
     def nd_rect_domain(self, x, y) -> pp.Domain:
         box: dict[str, pp.number] = {"xmin": 0, "xmax": x}
@@ -161,6 +161,7 @@ class EnergyTestModel(
     DynamicMomentumBalanceABCLinear,
 ): ...
 
+
 # This is where the simulation actually is run. We loop through different wave rotation
 # angles and run the model class once per angle.
 rotation_angles = np.array([0, np.pi / 6, np.pi / 3, np.pi / 4, np.pi / 8])
@@ -204,11 +205,11 @@ for rotation_angle in rotation_angles:
 #   * Dashed/not dashed line
 #   * Logarithmic y scale/not logarithmic y scale.
 index_angle_dict = {
-    0: ("$\\theta = 0$", pu.RGB(216, 27, 96), False, False),
-    1: ("$\\theta = \pi/6$", pu.RGB(30, 136, 229), False, False),
-    2: ("$\\theta = \pi/3$", pu.RGB(255, 193, 7), True, False),
-    3: ("$\\theta = \pi/4$", pu.RGB(0, 0, 0), True, False),
-    4: ("$\\theta = \pi/8$", pu.RGB(216, 27, 96), True, False),
+    0: ("$\\theta = 0$", pu.RGB(216, 27, 96), False, True),
+    1: ("$\\theta = \pi/6$", pu.RGB(30, 136, 229), False, True),
+    2: ("$\\theta = \pi/3$", pu.RGB(255, 193, 7), True, True),
+    3: ("$\\theta = \pi/4$", pu.RGB(0, 0, 0), True, True),
+    4: ("$\\theta = \pi/8$", pu.RGB(25, 25, 25), False, True),
 }
 
 for key, value in index_angle_dict.items():
@@ -228,7 +229,6 @@ for key, value in index_angle_dict.items():
         color=value[1],
         linestyle="-" if not value[2] else "--",
     )
-    print(value[0], energy_values[-1] * 100)
 
 plt.axvline(
     x=10 / np.sqrt(3),
