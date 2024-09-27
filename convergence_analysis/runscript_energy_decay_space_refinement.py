@@ -17,6 +17,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 output_dir = os.path.join(script_dir, folder_name)
 os.makedirs(output_dir, exist_ok=True)
 
+
 # Model class for setting up and running the simulation from here and onwards.
 class BoundaryConditionsEnergyTest:
     def initial_condition_bc(self, bg: pp.BoundaryGrid) -> np.ndarray:
@@ -158,6 +159,7 @@ class EnergyTestModel(
     DynamicMomentumBalanceABCLinear,
 ): ...
 
+
 # This is where the simulation actually is run. We loop through different space
 # refinements and run the model class once per refinement.
 dxs = np.array([1 / 2**i for i in range(5, 7)])
@@ -226,7 +228,6 @@ for key, value in index_dx_dict.items():
         color=value[1],
         linestyle="-" if not value[2] else "--",
     )
-    print(value[0], energy_values[-1] * 100)
 
 plt.axvline(
     x=10 / np.sqrt(3),
