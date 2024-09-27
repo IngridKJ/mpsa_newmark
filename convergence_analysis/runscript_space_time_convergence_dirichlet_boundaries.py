@@ -55,7 +55,7 @@ params = {
 conv_analysis = ConvergenceAnalysis(
     model_class=ManuMechSetup3d,
     model_params=deepcopy(params),
-    levels=4,
+    levels=2,
     spatial_refinement_rate=2,
     temporal_refinement_rate=2,
 )

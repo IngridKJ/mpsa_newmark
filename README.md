@@ -22,13 +22,29 @@ script after `cd` into the mpsa_newmark directory is as shown in the following:
 These convergence analyses are performed with homogeneous Dirichlet conditions on a 3D
 simplex grid. All convergence runscripts generate an output file which contains grid
 size, number of cells, time step size, displacement error and traction error.
+
+Note: These simulations are quite memory intensive and time consuming. Therefore we have
+assigned some default parameters which lead to less demanding simulations. The parameters which reproduce the results in the article are detailed for each script:
 * Convergence in space and time:
   * [runscript_space_time_convergence_dirichlet_boundaries](./convergence_analysis/runscript_space_time_convergence_dirichlet_boundaries.py)
-    (this script also renders the convergence result figure).
+    (this script also renders a figure of the convergence results).
+
+    The default parameters run the space/time convergence analysis with two refinement
+    levels. To reproduce the results which are found in the article:
+    * Change the "levels" parameter in line 58 from 2 to 4.
 * Convergence in space:
   * [runscript_space_convergence_dirichlet_boundaries](./convergence_analysis/runscript_space_convergence_dirichlet_boundaries.py)
+      * Change the "levels" parameter in line 54 from 2 to 4.
 * Convergence in time:
   * [runscript_time_convergence_dirichlet_boundaries](./convergence_analysis/runscript_time_convergence_dirichlet_boundaries.py) 
+
+    The default parameters run the time convergence analysis with two refinement levels
+    and a coarser cell size than that found in the article. Note that the coarser grid
+    is not sufficiently fine to observe the second order convergence in time. To
+    reproduce the results from the article:
+    * Change the "cell_size" from 0.1 to 0.03125 in line 46.
+    * Change the "levels" parameter in line 53 from 2 to 4. 
+    
 
 All the runscripts utilize
 [manufactured_solution_dynamic_3D](./convergence_analysis/convergence_analysis_models/manufactured_solution_dynamic_3D.py)
@@ -36,8 +52,9 @@ as the manufactured solution setup.
 
 ### Convergence analysis of MPSA-Newmark with absorbing boundaries
 Convergence of the solution is performed in a quasi-1D setting. We have performed a
-convergence analysis with successive refinemenet in both space and time. The script also
-renders a convergence plot of the results:
+convergence analysis with successive refinemenet in both space and time. The script
+generates a file with displacement and traction errors, and a convergence plot of the
+results:
   * [runscript_space_time_convergence_absorbing_boundaries](./convergence_analysis/runscript_space_time_convergence_absorbing_boundaries.py)
 
 
@@ -46,38 +63,42 @@ The runscripts utilize
 as the model class setup. 
 
 ### Energy decay analysis of MPSA-Newmark with absorbing boundaries
-The energy decay analysis is performed both for successive refinement 
-of the grid, as well as for varying wave incidence angles. 
+The energy decay analysis is performed both for successive refinement of the grid, as
+well as for varying wave incidence angles. In both cases the kinetic energy values for
+each time step in each simulation is saved in files within the directory
+[energy_values](./convergence_analysis/energy_values/).
 
-Rendering the figure for:
-* Rendering the figure for successive grid refinement is done by running the script
-[runscript_energy_decay_space_refinement](./convergence_analysis/runscript_energy_decay_space_refinement.py).
+Grid refinement:
+* [runscript_energy_decay_space_refinement](./convergence_analysis/runscript_energy_decay_space_refinement.py).
+
+  To reproduce the results in the article:
+  * Change np.range(5, 7) with np.range(5, 10) in line 163.
+  * Uncomment lines 205, 206 and 207 for plotting all of the refinements.
 
 
-* Rendering the figure for changing the wave incidence angle, $\theta$, is done by running the script
-[runscript_energy_decay_vary_theta](./convergence_analysis/runscript_energy_decay_vary_theta.py).
+Varying the wave incidence angle, $\theta$:
+* [runscript_energy_decay_vary_theta](./convergence_analysis/runscript_energy_decay_vary_theta.py).
+  
+  To reproduce the results in the article:
+  * Change the cell size value from 0.1 to 0.015625 in line 118.
 
 
 ## Results: Simulation examples
-Simulation example runscripts are found within [this](./example_runscripts/) directory.
+Simulation example runscripts are found within a dedicated [example
+runscripts](./example_runscripts/) directory.
 * The simulation from Example 1.1, which considers a seismic source located inside an
   inner transversely isotropic domain, is run by
   [runscript_example_1_1_source_in_inner_domain](./example_runscripts/runscript_example_1_1_source_in_inner_domain.py).
+
+  To reproduce the simulation in the article, change the cell_size from 0.1 to 0.0125 in line 35.
 * The simulation from Example 1.2, which considers a seismic source located outside an
   inner transversely isotropic domain, is run by
   [runscript_example_1_2_source_in_outer_domain](./example_runscripts/runscript_example_1_2_source_in_outer_domain.py).
+
+    To reproduce the simulation in the article, change the cell_size from 0.1 to 0.0125 in line 36.
 * The simulation from Example 2, which considers a layered heterogeneous medium with an
   open fracture, is run by
   [runscript_example_2_heterogeneous_fractured_domain](./example_runscripts/runscript_example_2_heterogeneous_fractured_domain.py).
 
-
-## Models
-All the above scripts utilize a common model class for solving the elastic wave
-equation. There are currently two model class setups:
-* [elastic_wave_equation_abc](./models/elastic_wave_equation_abc.py) considers a general
-  setup for solving the elastic wave equation with absorbing boundaries on all domain
-  sides.
-* [elastic_wave_equation_abc_linear](./models/elastic_wave_equation_abc_linear.py)
-  inherits from [elastic_wave_equation_abc](./models/elastic_wave_equation_abc.py), but
-  makes sure that the Jacobian is only assembled once. For linear problems it is not
-  necessary to assemble the Jacobian every time step, as it is constant.
+    To reproduce the simulation in the article, change the cell_size from 0.25 to 0.0175
+    in line 151.

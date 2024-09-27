@@ -160,7 +160,7 @@ class EnergyTestModel(
 
 # This is where the simulation actually is run. We loop through different space
 # refinements and run the model class once per refinement.
-dxs = np.array([1 / 32, 1 / 64, 1 / 128, 1 / 256, 1 / 512])
+dxs = np.array([1 / 2**i for i in range(5, 7)])
 i = 8
 for dx in dxs:
     tf = 15.0
@@ -202,9 +202,9 @@ for dx in dxs:
 #   * Dashed/not dashed line
 #   * Logarithmic y scale/not logarithmic y scale.
 index_dx_dict = {
-    12: ("$\Delta x = 1/512$", pu.RGB(0, 0, 0), False, True),
-    11: ("$\Delta x = 1/256$", pu.RGB(216, 27, 96), False, True),
-    10: ("$\Delta x = 1/128$", pu.RGB(30, 136, 229), True, True),
+    # 12: ("$\Delta x = 1/512$", pu.RGB(0, 0, 0), False, True),
+    # 11: ("$\Delta x = 1/256$", pu.RGB(216, 27, 96), False, True),
+    # 10: ("$\Delta x = 1/128$", pu.RGB(30, 136, 229), True, True),
     9: ("$\Delta x = 1/64$", pu.RGB(255, 193, 7), True, True),
     8: ("$\Delta x = 1/32$", pu.RGB(0, 0, 0), True, True),
 }

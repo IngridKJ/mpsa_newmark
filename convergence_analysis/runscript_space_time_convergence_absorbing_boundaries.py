@@ -95,7 +95,7 @@ class SpatialRefinementModel(MyUnitGeometry, ABCModel):
 with open(filename, "w") as file:
     file.write("num_cells, displacement_error, traction_error\n")
 
-refinements = np.array([0, 1, 2, 3, 4])
+refinements = np.arange(0, 5)
 for refinement_coefficient in refinements:
     tf = 15.0
     time_steps = 15 * (2**refinement_coefficient)

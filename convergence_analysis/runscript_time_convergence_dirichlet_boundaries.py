@@ -43,14 +43,14 @@ params = {
     "time_manager": time_manager,
     "manufactured_solution": "sin_bubble",
     "grid_type": "simplex",
-    "meshing_arguments": {"cell_size": 0.03125},
+    "meshing_arguments": {"cell_size": 0.1},
     "plot_results": False,
 }
 
 conv_analysis = ConvergenceAnalysis(
     model_class=ManuMechSetup3d,
     model_params=deepcopy(params),
-    levels=4,
+    levels=2,
     spatial_refinement_rate=1,
     temporal_refinement_rate=2,
 )
