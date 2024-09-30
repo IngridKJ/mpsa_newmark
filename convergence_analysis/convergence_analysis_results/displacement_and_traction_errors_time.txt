@@ -1,5 +1,0 @@
-# cell_diameter num_cells time_step error_displacement error_force 
-7.37e-02 148129 2.50e-01 1.36e+00 1.25e+00 
-7.37e-02 148129 1.25e-01 3.72e-01 3.37e-01 
-7.37e-02 148129 6.25e-02 8.96e-02 8.26e-02 
-7.37e-02 148129 3.12e-02 2.36e-02 2.36e-02 
