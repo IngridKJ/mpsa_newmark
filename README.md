@@ -29,8 +29,8 @@ script after `cd` into the mpsa_newmark directory is as shown in the following:
     Change the value of `coarse` from `True` to `False` to run simulations that match
     those detailed in the article.
   * `save_figure`: This flag is found in runscripts which allow for generating and
-    saving figures. Change `save_figure` from `True` to `False` to not generate and save
-    figures.
+    saving figures. Figures are saved in [figures](./convergence_analysis/figures). Change
+    `save_figure` from `True` to `False` to not generate and save figures.
   * `limit_file_export`: Certain runscripts generate large amounts of vtu and pvd files.
     Default behavior is to generate files for each time step. This flag allows to only
     generate files for the time steps which are presented in the article. Change
@@ -52,11 +52,11 @@ size, number of cells, time step size, displacement error and traction error.
 
 
 * Convergence in space:
-  * [runscript_space_convergence_dirichlet_boundaries](./convergence_analysis/runscript_space_convergence_dirichlet_boundaries.py)
+  * [runscript_space_convergence_dirichlet_boundaries](./convergence_analysis/runscript_space_convergence_dirichlet_boundaries.py).
     
 
 * Convergence in time:
-  * [runscript_time_convergence_dirichlet_boundaries](./convergence_analysis/runscript_time_convergence_dirichlet_boundaries.py) 
+  * [runscript_time_convergence_dirichlet_boundaries](./convergence_analysis/runscript_time_convergence_dirichlet_boundaries.py).
 
     The default parameters run the time convergence analysis with two refinement levels
     and a cell size coarser than ideal. The coarser grid is not sufficiently fine to
@@ -69,12 +69,12 @@ as the manufactured solution setup.
 ### Convergence analysis of MPSA-Newmark with absorbing boundaries
 Convergence of the solution is performed in a quasi-1D setting. We have performed a
 convergence analysis with successive refinemenet in both space and time. The script
-generates a file with displacement and traction errors, and a convergence plot of the
+generates a file with displacement and traction errors in the [convergence analysis results](./convergence_analysis/convergence_analysis_results/) directory, as well as a convergence plot of the
 results:
-  * [runscript_space_time_convergence_absorbing_boundaries](./convergence_analysis/runscript_space_time_convergence_absorbing_boundaries.py)
+  * [runscript_space_time_convergence_absorbing_boundaries](./convergence_analysis/runscript_space_time_convergence_absorbing_boundaries.py).
 
 
-The runscripts utilize
+The runscript utilizes
 [model_convergence_ABC](./convergence_analysis/convergence_analysis_models/model_convergence_ABC.py)
 as the model class setup. 
 
