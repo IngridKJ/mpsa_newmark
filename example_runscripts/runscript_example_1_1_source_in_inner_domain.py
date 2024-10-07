@@ -16,6 +16,13 @@ import run_models.run_linear_model as rlm
 from models.elastic_wave_equation_abc_linear import DynamicMomentumBalanceABCLinear
 from utils import TransverselyAnisotropicStiffnessTensor
 
+# Coarse/Fine variables
+coarse = True
+
+# Only export visualization files corresponding to the ones visualized in the article:
+limit_file_export = False
+times_in_article = [0.05, 0.1]
+
 
 class MyGeometry:
     def nd_rect_domain(self, x, y, z) -> pp.Domain:
@@ -32,7 +39,7 @@ class MyGeometry:
         self._domain = self.nd_rect_domain(x, y, z)
 
     def meshing_arguments(self) -> dict:
-        cell_size = self.solid.convert_units(0.1, "m")
+        cell_size = self.solid.convert_units(0.1 if coarse else 0.0125, "m")
         mesh_args: dict[str, float] = {"cell_size": cell_size}
         return mesh_args
 
@@ -69,8 +76,9 @@ class MomentumBalanceABCModifiedGeometry(
         return vals.ravel("F")
 
 
+time_steps = 90
 tf = 0.15
-dt = tf / 90.0
+dt = tf / time_steps
 
 
 time_manager = pp.TimeManager(
@@ -90,12 +98,15 @@ anisotropy_constants = {
 params = {
     "time_manager": time_manager,
     "grid_type": "cartesian",
-    "folder_name": "visualization_example_1_anisotropic",
+    "folder_name": "visualization_example_1_source_in_inner",
     "manufactured_solution": "simply_zero",
     "anisotropy_constants": anisotropy_constants,
     "progressbars": True,
     "inner_domain_width": 0.5,
     "inner_domain_center": (0.5, 0.5, 0.5),
+    # A value of None for times_to_export means that visualization files for all time
+    # steps are created and exported.
+    "times_to_export": times_in_article if limit_file_export else None,
 }
 
 model = MomentumBalanceABCModifiedGeometry(params)
