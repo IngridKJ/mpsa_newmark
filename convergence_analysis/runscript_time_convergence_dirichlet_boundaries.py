@@ -25,6 +25,9 @@ os.makedirs(output_dir, exist_ok=True)
 
 filename = os.path.join(output_dir, filename)
 
+# Coarse/Fine variables
+coarse = True
+
 # Simulation details from here and onwards
 time_steps = 4
 tf = 1.0
@@ -43,14 +46,14 @@ params = {
     "time_manager": time_manager,
     "manufactured_solution": "sin_bubble",
     "grid_type": "simplex",
-    "meshing_arguments": {"cell_size": 0.1},
+    "meshing_arguments": {"cell_size": 0.1 if coarse else 0.03125},
     "plot_results": False,
 }
 
 conv_analysis = ConvergenceAnalysis(
     model_class=ManuMechSetup3d,
     model_params=deepcopy(params),
-    levels=2,
+    levels=2 if coarse else 4,
     spatial_refinement_rate=1,
     temporal_refinement_rate=2,
 )

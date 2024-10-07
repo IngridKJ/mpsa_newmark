@@ -26,6 +26,10 @@ os.makedirs(output_dir, exist_ok=True)
 
 filename = os.path.join(output_dir, filename)
 
+# Coarse/Fine variables and plotting (save figure)
+coarse = True
+save_figure = True
+
 # Simulation details from here and onwards
 time_steps = 150
 tf = 1.0
@@ -51,7 +55,7 @@ params = {
 conv_analysis = ConvergenceAnalysis(
     model_class=ManuMechSetup3d,
     model_params=deepcopy(params),
-    levels=2,
+    levels=2 if coarse else 4,
     spatial_refinement_rate=2,
     temporal_refinement_rate=1,
 )
