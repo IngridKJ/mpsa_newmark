@@ -7,7 +7,7 @@ That includes:
 * Runscripts for all simulation examples.
 * Standardized model class setup for solving the elastic wave equation using PorePy.
   (https://github.com/pmgbergen/porepy).
-* Utility material which is used in the various simulations
+* Utility material which is used in the various simulations.
 * Additional material: We have included runscripts for separate space and time
 convergence analyses of MPSA-Newmark with Dirichlet boundary conditions.
 
@@ -70,7 +70,7 @@ as the model class setup.
 ### Energy decay analysis of MPSA-Newmark with absorbing boundaries
 The energy decay analysis is performed both for successive refinement of the grid, as
 well as for varying wave incidence angles. In both cases the kinetic energy values for
-each time step in each simulation is saved in files within the directory
+each time step in each simulation are saved in files within the directory
 [energy_values](./convergence_analysis/energy_values/).
 
 Grid refinement:
