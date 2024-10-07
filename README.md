@@ -1,6 +1,6 @@
 # mpsa_newmark
-This repository contains everything needed to reproduce the results found in the
-MPSA-Newmark paper.
+This repository contains runscripts and model class setups needed for reproducing the
+results in the MPSA-Newmark article.
 
 That includes:
 * Runscripts for the convergence and energy decay analyses.
