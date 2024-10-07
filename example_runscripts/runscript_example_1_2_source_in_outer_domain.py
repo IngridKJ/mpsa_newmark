@@ -21,7 +21,7 @@ from utils import TransverselyAnisotropicStiffnessTensor
 coarse = True
 
 # Only export visualization files corresponding to the ones visualized in the article:
-limit_file_export = True
+limit_file_export = False
 times_in_article = [0.05, 0.075, 0.125, 0.15]
 
 
