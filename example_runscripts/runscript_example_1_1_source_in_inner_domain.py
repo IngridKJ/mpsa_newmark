@@ -92,7 +92,7 @@ anisotropy_constants = {
     "mu_orthogonal": 1,
     "lambda_parallel": 5,
     "lambda_orthogonal": 5,
-    "volumetric_compr_lambda": 10,
+    "volumetric_compr_lambda": 1,
 }
 
 params = {
