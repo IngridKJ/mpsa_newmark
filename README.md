@@ -36,9 +36,7 @@ script after `cd` into the mpsa_newmark directory is as shown in the following:
     generate files for the time steps which are presented in the article. Change
     `limit_file_export` from `False` to `True` to limit the number of files exported.
 
-Note that not all the runscripts have have all the flags. If a certain runscript does
-not have access to a certain flag, it means that the flag is not needed for that
-specific simulation.
+Note that not all the runscripts have have/need all the flags.
 
 ## Verification: Convergence and energy decay analyses
 ### Convergence analysis of MPSA-Newmark
