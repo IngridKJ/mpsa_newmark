@@ -7,10 +7,4 @@ from .utility_functions import (
     inner_domain_cells,
 )
 
-from .anisotropy_mixins import (
-    TransverselyAnisotropicStiffnessTensor,
-    SimpleAnisotropy,
-    InnerDomainVTIStiffnessTensorMixin,
-)
-
-from .stiffness_tensors import StiffnessTensorInnerVTI
+from .anisotropy_mixins import TransverselyIsotropicStiffnessTensor
