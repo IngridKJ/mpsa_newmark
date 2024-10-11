@@ -88,7 +88,7 @@ class InitialConditionsAndMaterialProperties:
         return vals.ravel("F")
 
 
-class MyGeometry:
+class Geometry:
     def meshing_kwargs(self) -> dict:
         """Keyword arguments for md-grid creation.
 
@@ -158,9 +158,9 @@ class MyGeometry:
         return mesh_args
 
 
-class MomentumBalanceModifiedGeometry(
+class ModelSetupFracturedHeterogeneous(
     InitialConditionsAndMaterialProperties,
-    MyGeometry,
+    Geometry,
     RemoveFractureRelatedEquationsMomentumBalance,
     DynamicMomentumBalanceABCLinear,
 ): ...
@@ -189,5 +189,5 @@ params = {
     "times_to_export": times_in_article if limit_file_export else None,
 }
 
-model = MomentumBalanceModifiedGeometry(params)
+model = ModelSetupFracturedHeterogeneous(params)
 rlm.run_linear_model(model, params)

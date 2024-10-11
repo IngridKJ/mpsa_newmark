@@ -24,7 +24,7 @@ save_figure = True
 
 
 # Model class for setting up and running the simulation from here and onwards.
-class BoundaryConditionsEnergyTest:
+class BoundaryConditionsEnergyDecayAnalysis:
     def initial_condition_bc(self, bg: pp.BoundaryGrid) -> np.ndarray:
         dt = self.time_manager.dt
         vals_0 = self.initial_condition_value_function(bg=bg, t=0)
@@ -101,13 +101,13 @@ class BoundaryConditionsEnergyTest:
         return bc_vals
 
 
-class SourceValuesEnergyTest:
+class SourceValuesEnergyDecayAnalysis:
     def evaluate_mechanics_source(self, f: list, sd: pp.Grid, t: float) -> np.ndarray:
         vals = np.zeros((self.nd, sd.num_cells))
         return vals.ravel("F")
 
 
-class MyGeometry:
+class Geometry:
     def nd_rect_domain(self, x, y) -> pp.Domain:
         box: dict[str, pp.number] = {"xmin": 0, "xmax": x}
         box.update({"ymin": 0, "ymax": y})
@@ -156,10 +156,10 @@ class RotationAngle:
         return self.rotation_angle_from_list
 
 
-class EnergyTestModel(
-    BoundaryConditionsEnergyTest,
-    SourceValuesEnergyTest,
-    MyGeometry,
+class ModelSetupEnergyDecayAnalysis(
+    BoundaryConditionsEnergyDecayAnalysis,
+    SourceValuesEnergyDecayAnalysis,
+    Geometry,
     ExportEnergy,
     RotationAngle,
     DynamicMomentumBalanceABCLinear,
@@ -195,7 +195,7 @@ for rotation_angle in rotation_angles:
         "material_constants": material_constants,
     }
 
-    model = EnergyTestModel(params)
+    model = ModelSetupEnergyDecayAnalysis(params)
     model.rotation_angle_from_list = rotation_angle
     model.angle_index = i
     with open(os.path.join(output_dir, f"energy_values_{i}.txt"), "w") as file:

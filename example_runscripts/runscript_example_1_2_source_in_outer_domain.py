@@ -25,7 +25,7 @@ limit_file_export = False
 times_in_article = [0.05, 0.075, 0.125, 0.15]
 
 
-class MyGeometry:
+class Geometry:
     def nd_rect_domain(self, x, y, z) -> pp.Domain:
         box: dict[str, pp.number] = {"xmin": 0, "xmax": x}
 
@@ -45,8 +45,8 @@ class MyGeometry:
         return mesh_args
 
 
-class MomentumBalanceABCModifiedGeometry(
-    MyGeometry,
+class ModelSetupSourceInOuterDomain(
+    Geometry,
     TransverselyIsotropicStiffnessTensor,
     DynamicMomentumBalanceABCLinear,
 ):
@@ -111,5 +111,5 @@ params = {
     "times_to_export": times_in_article if limit_file_export else None,
 }
 
-model = MomentumBalanceABCModifiedGeometry(params)
+model = ModelSetupSourceInOuterDomain(params)
 rlm.run_linear_model(model, params)

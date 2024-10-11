@@ -28,7 +28,7 @@ filename = os.path.join(output_dir, filename)
 save_figure = True
 
 
-class MyUnitGeometry:
+class Geometry:
     def nd_rect_domain(self, x, y) -> pp.Domain:
         box: dict[str, pp.number] = {"xmin": 0, "xmax": x}
 
@@ -47,7 +47,7 @@ class MyUnitGeometry:
         return mesh_args
 
 
-class SpatialRefinementModel(MyUnitGeometry, ABCModel):
+class SpatialRefinementModel(Geometry, ABCModel):
     def data_to_export(self):
         data = super().data_to_export()
 
