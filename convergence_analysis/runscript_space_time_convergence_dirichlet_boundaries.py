@@ -88,7 +88,7 @@ if save_figure:
     y_trac = values["error_force"]
 
     # Plot the sample data
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(8, 5))
     ax.loglog(
         num_cells,
         y_disp,
