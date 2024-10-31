@@ -89,7 +89,7 @@ time_manager = pp.TimeManager(
 
 anisotropy_constants = {
     "mu_parallel": 1,
-    "mu_orthogonal": 1,
+    "mu_orthogonal": 2,
     "lambda_parallel": 5,
     "lambda_orthogonal": 5,
     "volumetric_compr_lambda": 1,
