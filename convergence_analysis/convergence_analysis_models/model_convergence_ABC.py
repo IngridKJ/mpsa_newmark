@@ -211,8 +211,8 @@ class ConstitutiveLawsAndSource:
             Cell-wise stiffness tensor in SI units.
 
         """
-        lmbda = self.solid.lame_lambda() * np.ones(subdomain.num_cells)
-        mu = self.solid.shear_modulus() * np.ones(subdomain.num_cells)
+        lmbda = self.solid.lame_lambda * np.ones(subdomain.num_cells)
+        mu = self.solid.shear_modulus * np.ones(subdomain.num_cells)
         return FourthOrderTensorUnitTest(mu, lmbda)
 
     def elastic_force(self, sd, sigma_total, time: float) -> np.ndarray:
@@ -272,7 +272,7 @@ class FourthOrderTensorUnitTest(object):
 
     Cell-wise representation of a fourth order tensor whose off-diagonal components
     are discarded. It is represented by (3^2, 3^2 ,Nc) -array, where Nc denotes the
-    number of cells, i.e. the tensor values are stored discretely. 
+    number of cells, i.e. the tensor values are stored discretely.
 
     Attributes:
         values: dimensions (3^2, 3^2, nc), cell-wise representation of

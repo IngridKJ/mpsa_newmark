@@ -84,12 +84,12 @@ class NamesAndConstants:
             cell-center values, depending on the input parameter.
 
         """
-        rho = self.solid.density()
+        rho = self.solid.density
         if not is_scalar:
             return np.sqrt((self.lambda_vector + 2 * self.mu_vector) / rho)
         else:
             return np.sqrt(
-                (self.solid.lame_lambda() + 2 * self.solid.shear_modulus() / rho)
+                (self.solid.lame_lambda + 2 * self.solid.shear_modulus / rho)
             )
 
     def secondary_wave_speed(self, is_scalar: bool = False) -> Union[float, np.ndarray]:
@@ -108,15 +108,15 @@ class NamesAndConstants:
             cell-center values, depending on the input parameter.
 
         """
-        rho = self.solid.density()
+        rho = self.solid.density
         if not is_scalar:
             return np.sqrt(self.mu_vector / rho)
         else:
-            return np.sqrt(self.solid.shear_modulus() / rho)
+            return np.sqrt(self.solid.shear_modulus / rho)
 
 
 class BoundaryAndInitialConditions:
-    
+
     @property
     def discrete_robin_weight_coefficient(self) -> float:
         """Additional coefficient for discrete Robin boundary conditions.
@@ -210,7 +210,6 @@ class BoundaryAndInitialConditions:
         robin_rhs *= sd.face_areas[boundary_faces][:, None]
         robin_rhs = robin_rhs.T
         return robin_rhs.ravel("F")
-    
 
     def assign_robin_weight(
         self, sd: pp.Grid, bc: pp.BoundaryConditionVectorial
@@ -332,7 +331,7 @@ class BoundaryAndInitialConditions:
 
         """
         dt = self.time_manager.dt
-        rho = self.solid.density()
+        rho = self.solid.density
         mu = self.mu_vector
 
         if direction == "shear":
@@ -523,7 +522,6 @@ class BoundaryAndInitialConditions:
             vals[2] = acceleration_function[2](x, y, z, t)
 
         return vals.ravel("F")
-
 
     def initial_condition_bc(self, bg: pp.BoundaryGrid) -> np.ndarray:
         """Sets the initial bc values for 0th and -1st time step in the data dictionary.
@@ -885,12 +883,12 @@ class SolutionStrategyDynamicMomentumBalance:
         self, boundary_grid: pp.BoundaryGrid
     ) -> None:
         """Construct and save boundary displacement for usage in boundary conditions.
-        
+
         The absorbing boundary conditions require the previous displacement values on
         the domain boundary. This method makes sure that the displacement values two
         time steps back in time is stored on the appropriate time step solution index.
         Additionally it constructs the previous boundary displacement, and saves it to
-        the current time step solution index (= 0).     
+        the current time step solution index (= 0).
 
         Paramters:
             boundary_grid: The grid that the displacement values are evaluated on.
@@ -961,8 +959,8 @@ class ConstitutiveLawsDynamicMomentumBalance:
         """
         subdomain = self.mdg.subdomains(dim=self.nd)[0]
 
-        self.lambda_vector = self.solid.lame_lambda() * np.ones(subdomain.num_cells)
-        self.mu_vector = self.solid.shear_modulus() * np.ones(subdomain.num_cells)
+        self.lambda_vector = self.solid.lame_lambda * np.ones(subdomain.num_cells)
+        self.mu_vector = self.solid.shear_modulus * np.ones(subdomain.num_cells)
 
     def stiffness_tensor(self, subdomain: pp.Grid) -> pp.FourthOrderTensor:
         """Stiffness tensor [Pa].

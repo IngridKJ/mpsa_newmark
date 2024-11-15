@@ -8,6 +8,7 @@ import numpy as np
 import porepy as pp
 from utils import inner_domain_cells
 
+
 class TransverselyIsotropicStiffnessTensor:
     def stiffness_tensor(self, subdomain: pp.Grid) -> pp.FourthOrderTensor:
         """Stiffness tensor [Pa].
@@ -25,8 +26,8 @@ class TransverselyIsotropicStiffnessTensor:
             Cell-wise stiffness tensor in SI units.
 
         """
-        lmbda = self.solid.lame_lambda() * np.ones(subdomain.num_cells)
-        mu = self.solid.shear_modulus() * np.ones(subdomain.num_cells)
+        lmbda = self.solid.lame_lambda * np.ones(subdomain.num_cells)
+        mu = self.solid.shear_modulus * np.ones(subdomain.num_cells)
         stiffness_tensor = pp.FourthOrderTensor(mu, lmbda)
 
         width = self.params.get("inner_domain_width", 0)
