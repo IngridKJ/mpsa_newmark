@@ -13,6 +13,7 @@ from porepy.applications.convergence_analysis import ConvergenceAnalysis
 from convergence_analysis.convergence_analysis_models.model_convergence_ABC import (
     ABCModel,
 )
+from utils_convergence_analysis import traction_error_volume_weight
 
 # Prepare path for generated output files
 folder_name = "convergence_analysis_results"
@@ -24,7 +25,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 filename = os.path.join(output_dir, filename)
 
-# Coarse/Fine variables and plotting (save figure)
+# Plotting/Save figure or not:
 save_figure = True
 
 
@@ -50,46 +51,45 @@ class Geometry:
 class SpatialRefinementModel(Geometry, ABCModel):
     def data_to_export(self):
         data = super().data_to_export()
-
-        sd = self.mdg.subdomains(dim=self.nd)[0]
-        x_cc = sd.cell_centers[0, :]
-        time = self.time_manager.time
-        cp = self.primary_wave_speed(is_scalar=True)
-
-        # Exact displacement and traction
-        u_exact = np.array([np.sin(time - x_cc / cp), np.zeros(len(x_cc))]).ravel("F")
-
-        u, x, y, t = utils.symbolic_representation(model=self)
-        _, sigma, _ = utils.symbolic_equation_terms(model=self, u=u, x=x, y=y, t=t)
-        T_exact = self.elastic_force(
-            sd=sd, sigma_total=sigma, time=self.time_manager.time
-        )
-
-        # Approximated displacement and traction
-        displacement_ad = self.displacement([sd])
-        u_approximate = displacement_ad.value(self.equation_system)
-        traction_ad = self.stress([sd])
-        T_approximate = traction_ad.value(self.equation_system)
-
-        # Compute error for displacement and traction
-        error_displacement = ConvergenceAnalysis.l2_error(
-            grid=sd,
-            true_array=u_exact,
-            approx_array=u_approximate,
-            is_scalar=False,
-            is_cc=True,
-            relative=True,
-        )
-        error_traction = ConvergenceAnalysis.l2_error(
-            grid=sd,
-            true_array=T_exact,
-            approx_array=T_approximate,
-            is_scalar=False,
-            is_cc=False,
-            relative=True,
-        )
-
         if self.time_manager.final_time_reached():
+            sd = self.mdg.subdomains(dim=self.nd)[0]
+            x_cc = sd.cell_centers[0, :]
+            time = self.time_manager.time
+            cp = self.primary_wave_speed(is_scalar=True)
+
+            # Exact displacement and traction
+            u_exact = np.array([np.sin(time - x_cc / cp), np.zeros(len(x_cc))]).ravel(
+                "F"
+            )
+
+            u, x, y, t = utils.symbolic_representation(model=self)
+            _, sigma, _ = utils.symbolic_equation_terms(model=self, u=u, x=x, y=y, t=t)
+            T_exact = self.elastic_force(
+                sd=sd, sigma_total=sigma, time=self.time_manager.time
+            )
+
+            # Approximated displacement and traction
+            displacement_ad = self.displacement([sd])
+            u_approximate = displacement_ad.value(self.equation_system)
+            traction_ad = self.stress([sd])
+            T_approximate = traction_ad.value(self.equation_system)
+            # Compute error for displacement and traction
+            error_displacement = ConvergenceAnalysis.l2_error(
+                grid=sd,
+                true_array=u_exact,
+                approx_array=u_approximate,
+                is_scalar=False,
+                is_cc=True,
+                relative=True,
+            )
+
+            error_traction = traction_error_volume_weight(
+                sd=sd,
+                true_array=T_exact,
+                approx_array=T_approximate,
+                is_scalar=False,
+                relative=True,
+            )
             with open(filename, "a") as file:
                 file.write(f"{sd.num_cells}, {error_displacement}, {error_traction}\n")
         return data

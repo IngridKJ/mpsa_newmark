@@ -2,6 +2,7 @@ import sys
 from copy import deepcopy
 
 import numpy as np
+import porepy as pp
 from porepy.utils.txt_io import TxtData, export_data_to_txt
 
 sys.path.append("../")
@@ -110,3 +111,65 @@ def export_errors_to_txt(
 
     # Finally, call the function to write into the txt
     export_data_to_txt(list_of_txt_data, file_name)
+
+
+def traction_error_volume_weight(
+    sd: pp.GridLike,
+    true_array: np.ndarray,
+    approx_array: np.ndarray,
+    is_scalar: bool,
+    relative: bool = False,
+) -> pp.number:
+    """To be documented."""
+    face_nodes = sd.face_nodes
+    all_meas = np.zeros(sd.num_faces)
+    for face_number in range(sd.num_faces):
+        # The nodes which belong to a certain face
+        face_node_indices = face_nodes.indices[
+            face_nodes.indptr[face_number] : face_nodes.indptr[face_number + 1]
+        ]
+
+        node_coordinates = []
+        for node in face_node_indices:
+            node_coordinates.append(sd.nodes[:, node])
+
+        neighboring_cells = np.where(sd.cell_faces[face_number].todense() != 0)[
+            1
+        ].tolist()
+
+        def compute_volume(sd, cell, nodes):
+            cc = sd.cell_centers[:, cell].reshape(-1, 1)
+            polygon = np.stack(nodes, axis=1)
+            distance = pp.geometry.distances.points_polygon(
+                p=cc, poly=polygon, tol=1e-8
+            )[0]
+            area = 1 / 3 * distance * sd.face_areas[face_number]
+            return area
+
+        def compute_area(sd, cell, nodes):
+            cc = sd.cell_centers[:, cell]
+            starting_point = nodes[0]
+            end_point = nodes[1]
+            distance, _ = pp.geometry.distances.points_segments(
+                p=cc, start=starting_point, end=end_point
+            )
+            area = 1 / 2 * distance * sd.face_areas[face_number]
+            return area
+
+        area_local = 0
+        for cell in neighboring_cells:
+            if sd.dim == 3:
+                area_local += compute_volume(sd, cell, node_coordinates)
+            elif sd.dim == 2:
+                area_local += compute_area(sd, cell, node_coordinates)
+        all_meas[face_number] = area_local
+    meas = all_meas
+
+    if not is_scalar:
+        meas = meas.repeat(sd.dim)
+
+    # Obtain numerator and denominator to determine the error.
+    numerator = np.sqrt(np.sum(meas * np.abs(true_array - approx_array) ** 2))
+    denominator = np.sqrt(np.sum(meas * np.abs(true_array) ** 2)) if relative else 1.0
+
+    return numerator / denominator
