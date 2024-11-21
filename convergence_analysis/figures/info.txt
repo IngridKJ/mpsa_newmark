@@ -1,0 +1,1 @@
+Directory where figures for the different convergence analyses are stored.

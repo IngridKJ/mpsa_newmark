@@ -1,0 +1,3 @@
+Directory where the convergence analysis results will be saved. The files containing the
+convergence analysis results are generated when the convergence analysis runscripts are
+running.

@@ -1,0 +1,3 @@
+Directory where the kinetic energy values from the energy decay analysis will be saved.
+The files containing the energy values are generated when the energy decay analysis
+runscripts are running.
