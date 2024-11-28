@@ -22,7 +22,6 @@ from porepy.applications.md_grids.domains import nd_cube_domain
 from porepy.utils.examples_utils import VerificationUtils
 from porepy.viz.data_saving_model_mixin import VerificationDataSaving
 from utils import symbolic_equation_terms, symbolic_representation
-from utils_convergence_analysis import traction_error_volume_weight
 
 # PorePy typings
 number = pp.number
@@ -111,11 +110,12 @@ class ManuMechDataSaving(VerificationDataSaving):
         force_ad = self.stress([sd])
         approx_force = force_ad.value(self.equation_system)
 
-        error_force = traction_error_volume_weight(
-            sd=sd,
+        error_force = ConvergenceAnalysis.l2_error(
+            grid=sd,
             true_array=exact_force,
             approx_array=approx_force,
             is_scalar=False,
+            is_cc=False,
             relative=True,
         )
 

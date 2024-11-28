@@ -13,7 +13,6 @@ from porepy.applications.convergence_analysis import ConvergenceAnalysis
 from convergence_analysis.convergence_analysis_models.model_convergence_ABC import (
     ABCModel,
 )
-from utils_convergence_analysis import traction_error_volume_weight
 
 # Prepare path for generated output files
 folder_name = "convergence_analysis_results"
@@ -82,14 +81,15 @@ class SpatialRefinementModel(Geometry, ABCModel):
                 is_cc=True,
                 relative=True,
             )
-
-            error_traction = traction_error_volume_weight(
-                sd=sd,
+            error_traction = ConvergenceAnalysis.l2_error(
+                grid=sd,
                 true_array=T_exact,
                 approx_array=T_approximate,
                 is_scalar=False,
+                is_cc=False,
                 relative=True,
             )
+
             with open(filename, "a") as file:
                 file.write(f"{sd.num_cells}, {error_displacement}, {error_traction}\n")
         return data
