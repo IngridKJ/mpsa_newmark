@@ -156,7 +156,7 @@ if save_figure:
         label="Traction",
     )
 
-    ax.set_title("Combined temporal and spatial convergence, orthogonal wave")
+    ax.set_title("Convergence analysis: Setup with absorbing boundaries")
     ax.set_ylabel("Relative $L^2$ error")
     ax.set_xlabel("$(Number\ of\ cells)^{1/2}$")
     ax.legend()

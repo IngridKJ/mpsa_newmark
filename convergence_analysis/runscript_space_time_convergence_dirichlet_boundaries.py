@@ -88,7 +88,7 @@ if save_figure:
     y_trac = values["error_force"]
 
     # Plot the sample data
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(6, 5))
     ax.loglog(
         num_cells,
         y_disp,
@@ -103,7 +103,7 @@ if save_figure:
         color="royalblue",
         label="Traction",
     )
-    ax.set_title("Convergence analysis: Spatial and temporal")
+    ax.set_title("Convergence analysis: Setup with Dirichlet boundaries")
     ax.set_xlabel("$(Number\ of\ cells)^{1/3}$")
     ax.set_ylabel("Relative $L^2$ error")
     ax.legend()
