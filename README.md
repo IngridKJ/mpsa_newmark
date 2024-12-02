@@ -5,10 +5,11 @@ results in the MPSA-Newmark article.
 That includes:
 * Runscripts for the convergence and energy decay analyses.
 * Runscripts for all simulation examples.
-* Standardized model class setup for solving the elastic wave equation using PorePy.
+* Standardized model class setup for solving the elastic wave equation using PorePy
   (https://github.com/pmgbergen/porepy).
 * Utility material which is used in the various simulations.
-* Additional material: We have included runscripts for separate space and time
+
+Additional material: We have included runscripts for separate space and time
 convergence analyses of MPSA-Newmark with Dirichlet boundary conditions.
 
 ## How to use:
@@ -57,8 +58,9 @@ size, number of cells, time step size, displacement error and traction error.
   * [runscript_time_convergence_dirichlet_boundaries](./convergence_analysis/runscript_time_convergence_dirichlet_boundaries.py).
 
     The default parameters run the time convergence analysis with two refinement levels
-    and a cell size coarser than ideal. The coarser grid is not sufficiently fine to
-    observe the second order convergence in time. 
+    and a cell size coarser than ideal. The coarse parameter setting causes the spatial
+    error to dominate, and we do therefore not observe the second order convergence in
+    time.
 
 All the runscripts utilize
 [manufactured_solution_dynamic_3D](./convergence_analysis/convergence_analysis_models/manufactured_solution_dynamic_3D.py)

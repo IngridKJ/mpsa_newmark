@@ -73,7 +73,7 @@ class ManuMechDataSaving(VerificationDataSaving):
 
     """
 
-    relative_l2_error: Callable
+    l2_error: Callable
     """Method for computing the discrete relative L2-error. Normally provided by a
     mixin instance of :class:`~porepy.applications.building_blocks.
     verification_utils.VerificationUtils`.
