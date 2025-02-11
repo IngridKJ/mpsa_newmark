@@ -109,7 +109,7 @@ for refinement_coefficient in refinements:
         dt_init=dt,
         constant_dt=True,
     )
-    # Unit square:
+
     solid_constants = pp.SolidConstants(lame_lambda=0.01, shear_modulus=0.01)
     material_constants = {"solid": solid_constants}
 
@@ -135,21 +135,21 @@ num_cells, displacement_errors, traction_errors = np.loadtxt(
     dtype=float,
 )
 
-
-num_cells_exp_1_over_dim = num_cells ** (1 / 2)
+num_time_steps = np.array([15, 30, 60, 120, 240])
+x_axis = (num_cells * num_time_steps)** (1 / 4)
 
 # Plot the sample data
 if save_figure:
     fig, ax = plt.subplots()
     ax.loglog(
-        num_cells_exp_1_over_dim,
+        x_axis,
         displacement_errors,
         "o--",
         color="firebrick",
         label="Displacement",
     )
     ax.loglog(
-        num_cells_exp_1_over_dim,
+        x_axis,
         traction_errors,
         "o--",
         color="royalblue",
@@ -158,14 +158,14 @@ if save_figure:
 
     ax.set_title("Convergence analysis: Setup with absorbing boundaries")
     ax.set_ylabel("Relative $L^2$ error")
-    ax.set_xlabel("$(Number\ of\ cells)^{1/2}$")
+    ax.set_xlabel("$(N_x \cdot N_t)^{1/4}$")
     ax.legend()
 
     # Draw the convergence triangle with multiple slopes
     draw_multiple_loglog_slopes(
         fig,
         ax,
-        origin=(1.1 * num_cells_exp_1_over_dim[-2], traction_errors[-2]),
+        origin=(1.1 * x_axis[-2], traction_errors[-2]),
         triangle_width=1.0,
         slopes=[-2],
         inverted=False,

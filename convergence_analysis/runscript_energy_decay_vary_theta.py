@@ -171,8 +171,8 @@ class ModelSetupEnergyDecayAnalysis(
 
 # This is where the simulation actually is run. We loop through different wave rotation
 # angles and run the model class once per angle.
-rotation_angles = np.array([0, np.pi / 6, np.pi / 3, np.pi / 4, np.pi / 8])
-i = 0
+rotation_angles = np.array([np.pi / 6, np.pi / 3, np.pi / 4, np.pi / 8])
+i = 1
 for rotation_angle in rotation_angles:
     tf = 15.0
     time_steps = 300
@@ -214,11 +214,12 @@ if save_figure:
     #   * Dashed/not dashed line
     #   * Logarithmic y scale/not logarithmic y scale.
     index_angle_dict = {
-        0: ("$\\theta = 0$", pu.RGB(216, 27, 96), False, True),
         1: ("$\\theta = \pi/6$", pu.RGB(30, 136, 229), False, True),
         2: ("$\\theta = \pi/3$", pu.RGB(255, 193, 7), True, True),
         3: ("$\\theta = \pi/4$", pu.RGB(0, 0, 0), True, True),
         4: ("$\\theta = \pi/8$", pu.RGB(25, 25, 25), False, True),
+        5: ("$\\theta = \pi/5$", pu.RGB(200, 100, 100), False, True),
+        6: ("$\\theta = 3*\pi/10$", pu.RGB(100, 100, 200), True, True),
     }
 
     for key, value in index_angle_dict.items():
