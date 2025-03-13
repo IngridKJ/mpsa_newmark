@@ -34,7 +34,6 @@ class CustomSolverMixin:
         import time
 
         petsc_solver_q = self.params.get("petsc_solver_q", False)
-        tb = time.time()
         if petsc_solver_q and _IS_PETSC4PY_AVAILABLE:
             try:
                 csr_mat = self.linear_system_jacobian
@@ -49,23 +48,23 @@ class CustomSolverMixin:
                 bsize=NDIM,
             )
 
-            # solving ls
+            # Solving linear system with GAMG
             ksp = PETSc.KSP().create()
             options = PETSc.Options()
-            options["pc_type"] = "hypre"
-            options["pc_hypre_type"] = "boomeramg"
-            options["pc_hypre_boomeramg_max_iter"] = 1
-            options["pc_hypre_boomeramg_cycle_type"] = "V"
-            options["pc_hypre_boomeramg_truncfactor"] = 0.3
+            options["pc_type"] = "gamg"
+            options["pc_gamg_type"] = "agg"
+            options["pc_gamg_threshold"] = 0.02
+
             options.setValue("ksp_type", "gmres")
             options.setValue("ksp_rtol", 1e-8)
             options.setValue("ksp_max_it", 20 * 50)
             options.setValue("ksp_gmres_restart", 50)
             options.setValue("ksp_pc_side", "right")
             options.setValue("ksp_norm_type", "unpreconditioned")
-            ksp.setFromOptions()
 
+            ksp.setFromOptions()
             ksp.setOperators(jac_g)
+
             b = jac_g.createVecLeft()
             b.array[:] = res_g
             x = jac_g.createVecRight()
@@ -74,6 +73,7 @@ class CustomSolverMixin:
             ksp.solve(b, x)
 
             sol = x.array
+
         else:
             try:
                 A = self.linear_system_jacobian
@@ -99,5 +99,4 @@ class CustomSolverMixin:
                 sol = np.atleast_1d(x)
             except AttributeError:
                 sol = super().solve_linear_system()
-        te = time.time()
         return sol
