@@ -4,7 +4,7 @@ The default behavior when running PorePy models is that the Jacobian is assemble
 every time step. This is not necessary for linear problems, where the Jacobian doesn't
 change between time steps. Hence, this is a model class setup with the purpose of
 running linear models.
-    
+
 Note that the Jacobian must be constant throughout the simulation (linear problem) for
 this simplification to be valid.
 
