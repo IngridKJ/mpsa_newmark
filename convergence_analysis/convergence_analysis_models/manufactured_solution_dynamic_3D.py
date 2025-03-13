@@ -96,7 +96,7 @@ class ManuMechDataSaving(VerificationDataSaving):
         # Collect data
         exact_displacement = self.exact_sol.displacement(sd=sd, time=t)
         displacement_ad = self.displacement([sd])
-        approx_displacement = displacement_ad.value(self.equation_system)
+        approx_displacement = self.equation_system.evaluate(displacement_ad)
         error_displacement = ConvergenceAnalysis.l2_error(
             grid=sd,
             true_array=exact_displacement,
@@ -108,7 +108,7 @@ class ManuMechDataSaving(VerificationDataSaving):
 
         exact_force = self.exact_sol.elastic_force(sd=sd, time=t)
         force_ad = self.stress([sd])
-        approx_force = force_ad.value(self.equation_system)
+        approx_force = self.equation_system.evaluate(force_ad)
 
         error_force = ConvergenceAnalysis.l2_error(
             grid=sd,
