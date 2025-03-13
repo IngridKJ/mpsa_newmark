@@ -46,7 +46,8 @@ class RemoveFractureRelatedEquationsMomentumBalance:
         """
         if len(domains) == 0 or all(isinstance(d, pp.BoundaryGrid) for d in domains):
             return self.create_boundary_operator(
-                name=self.stress_keyword, domains=domains  # type: ignore[call-arg]
+                name=self.stress_keyword,
+                domains=domains,  # type: ignore[call-arg]
             )
 
         # Check that the subdomains are grids.
