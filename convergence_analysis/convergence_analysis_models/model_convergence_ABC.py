@@ -15,9 +15,62 @@ sys.path.append("../../")
 
 from models import DynamicMomentumBalanceABCLinear
 from utils import u_v_a_wrap
+from utils.anisotropy_mixins import TransverselyIsotropicTensorMixin
+import utils
 
 
-class BoundaryConditionsUnitTest:
+from porepy.applications.convergence_analysis import ConvergenceAnalysis
+
+
+class RandomProperties:
+    @property
+    def heterogeneity_location(self):
+        return self.params.get("heterogeneity_location", 0.5)
+
+    @property
+    def heterogeneity_factor(self):
+        return self.params.get("heterogeneity_factor", 1.0)
+
+
+class Geometry:
+    def nd_rect_domain(self, x, y) -> pp.Domain:
+        box: dict[str, pp.number] = {"xmin": 0, "xmax": x}
+        box.update({"ymin": 0, "ymax": y})
+        return pp.Domain(box)
+
+    def set_domain(self) -> None:
+        x = 1.0 / self.units.m
+        y = 1.0 / self.units.m
+        self._domain = self.nd_rect_domain(x, y)
+
+    def set_polygons(self):
+        if type(self.heterogeneity_location) is list:
+            L = self.heterogeneity_location[0]
+            W = self.heterogeneity_location[1]
+        else:
+            L = self.heterogeneity_location
+            W = self.domain.bounding_box["xmax"]
+
+        H = self.domain.bounding_box["ymax"]
+        west = np.array([[L, L], [0.0, H]])
+        north = np.array([[L, W], [H, H]])
+        east = np.array([[W, W], [H, 0.0]])
+        south = np.array([[W, L], [0.0, 0.0]])
+        return west, north, east, south
+
+    def set_fractures(self) -> None:
+        """Setting a diagonal fracture"""
+        west, north, east, south = self.set_polygons()
+
+        self._fractures = [
+            pp.LineFracture(west),
+            pp.LineFracture(north),
+            pp.LineFracture(east),
+            pp.LineFracture(south),
+        ]
+
+
+class BoundaryConditions:
     def bc_type_mechanics(self, sd: pp.Grid) -> pp.BoundaryConditionVectorial:
         """Method for assigning boundary condition type.
 
@@ -103,14 +156,10 @@ class BoundaryConditionsUnitTest:
         robin_rhs = robin_rhs.T
 
         boundary_sides = self.domain_boundary_sides(sd)
-        inds_north = np.where(boundary_sides.north)[0]
-        inds_south = np.where(boundary_sides.south)[0]
-
-        inds_north = np.where(np.isin(boundary_faces, inds_north))[0]
-        inds_south = np.where(np.isin(boundary_faces, inds_south))[0]
-
-        robin_rhs[:, inds_north] *= 0
-        robin_rhs[:, inds_south] *= 0
+        for direction in ["north", "south"]:
+            inds = np.where(getattr(boundary_sides, direction))[0]
+            inds = np.where(np.isin(boundary_faces, inds))[0]
+            robin_rhs[:, inds] *= 0
 
         return robin_rhs.ravel("F")
 
@@ -255,8 +304,64 @@ class ConstitutiveLawsAndSource:
         return vals.ravel("F")
 
 
+class ExportData:
+    def data_to_export(self):
+        data = super().data_to_export()
+        if self.time_manager.final_time_reached():
+            self.compute_and_save_errors(filename=self.filename_path)
+        return data
+
+    def compute_and_save_errors(self, filename: str) -> None:
+        sd = self.mdg.subdomains(dim=self.nd)[0]
+        x_cc = sd.cell_centers[0, :]
+        time = self.time_manager.time
+        cp = self.primary_wave_speed(is_scalar=True)
+
+        # Exact displacement and traction
+        u_exact = np.array([np.sin(time - x_cc / cp), np.zeros(len(x_cc))]).ravel("F")
+
+        u, x, y, t = utils.symbolic_representation(model=self)
+        _, sigma, _ = utils.symbolic_equation_terms(model=self, u=u, x=x, y=y, t=t)
+        T_exact = self.elastic_force(
+            sd=sd, sigma_total=sigma, time=self.time_manager.time
+        )
+
+        # Approximated displacement and traction
+        displacement_ad = self.displacement([sd])
+        u_approximate = self.equation_system.evaluate(displacement_ad)
+        traction_ad = self.stress([sd])
+        T_approximate = self.equation_system.evaluate(traction_ad)
+
+        # Compute error for displacement and traction
+        error_displacement = ConvergenceAnalysis.lp_error(
+            grid=sd,
+            true_array=u_exact,
+            approx_array=u_approximate,
+            is_scalar=False,
+            is_cc=True,
+            relative=True,
+        )
+        error_traction = ConvergenceAnalysis.lp_error(
+            grid=sd,
+            true_array=T_exact,
+            approx_array=T_approximate,
+            is_scalar=False,
+            is_cc=False,
+            relative=True,
+        )
+
+        with open(filename, "a") as file:
+            file.write(
+                f"{sd.num_cells}, {self.time_manager.time_index}, {error_displacement}, {error_traction}\n"
+            )
+
+
 class ABCModel(
-    BoundaryConditionsUnitTest,
+    RandomProperties,
+    Geometry,
+    BoundaryConditions,
     ConstitutiveLawsAndSource,
+    TransverselyIsotropicTensorMixin,
+    ExportData,
     DynamicMomentumBalanceABCLinear,
 ): ...
