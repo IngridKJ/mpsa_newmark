@@ -40,7 +40,7 @@ class Geometry:
         self._domain = self.nd_rect_domain(x, y, z)
 
     def meshing_arguments(self) -> dict:
-        cell_size = self.units.convert_units(0.05 if coarse else 0.0125, "m")
+        cell_size = self.units.convert_units(0.1 if coarse else 0.0125, "m")
         mesh_args: dict[str, float] = {"cell_size": cell_size}
         return mesh_args
 
