@@ -6,7 +6,10 @@ creating source terms, setting initial values, compute errors, etc.). These anal
 solutions are determined by the "manufactured_solution" key value in the params
 dictionary. Creation of source terms uses symbolic differentiation provided by sympy.
 Therefore, running other manufactured solutions than those already present is easily
-done by adding the expression for it where the manufactured solution is defined. Additionally, there are utility functions for construction of the 9x9 representation of a stiffness tensor representing a transversely isotropic media.
+done by adding the expression for it where the manufactured solution is defined.
+Additionally, there are utility functions for construction of the 9x9 representation of
+a stiffness tensor representing a transversely isotropic media with arbitrary symmetry
+axis.
 
 
 """
@@ -27,9 +30,6 @@ def acceleration_velocity_displacement(
     data: dict,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Function for fetching acceleration, velocity and displacement values.
-
-    Found it repetitive to do this in the methods for updating velocity and acceleration
-    values in the dynamic momentum balance model.
 
     Parameters:
         model: The model.
@@ -106,13 +106,14 @@ def _symbolic_representation_2D(model, return_dt=False, return_ddt=False):
 
     Use of this method is rather simple, as the default analytical solution is that with
     the name "simply_zero" which is just zero solution. For another analytical solution
-    one must simply just assign a different value to the key "manufactured_solution" in
-    the model's parameter dictionary. Look into the code for what solutions are
-    accessible, or make new ones if the ones already existing do not suffice.
+    one must just assign a different value to the key "manufactured_solution" in the
+    model's parameter dictionary. Look into the code for what solutions are accessible,
+    or make new ones if the ones already existing do not suffice.
 
     Parameters:
         model: The model class.
-        return_dt: Flag for wether velocity is returned. Return velocity if True.
+        return_dt: Flag for wether velocity is returned. Return
+        velocity if True.
         return_ddt: Flag for whether acceleration is returned. Return acceleration if
             True.
 
@@ -160,7 +161,7 @@ def _symbolic_representation_2D(model, return_dt=False, return_ddt=False):
 
 
 def _symbolic_equation_terms_2D(model, u, x, y, t):
-    """Symbolic representation of the momentum balance eqn. terms in 3D.
+    """Symbolic representation of the momentum balance equation terms in 2D.
 
     Parameters:
         model: The model class
@@ -304,7 +305,7 @@ def _symbolic_representation_3D(model, return_dt=False, return_ddt=False):
 
 
 def _symbolic_equation_terms_3D(model, u, x, y, z, t) -> list:
-    """Symbolic representation of the momentum balance eqn. terms in 3D.
+    """Symbolic representation of the momentum balance equation terms in 3D.
 
     Parameters:
         model: The model class
@@ -427,6 +428,11 @@ def u_v_a_wrap(
             to False.
         return_ddt: True if acceleration is to be returned instead of displacement.
             Defaults to False.
+
+    Returns:
+        A list of the lambdified expression for displacement, velocity or acceleration.
+        The list has two element in 2D and three elements in 3D - one for each
+        coordinate direction.
 
     """
     if is_2D:
@@ -633,11 +639,13 @@ def _body_force_func_3D(model) -> list:
 
 
 def use_constraints_for_inner_domain_cells(model, sd) -> np.ndarray:
-    """Finds cell indices of the cells laying within constraints in a 3D grid.
+    """Finds cell indices of the cells laying within constraints in the grid.
 
     Assumes the existance of the method set_polygons() in the model class which is
-    calling this function. This function takes the nodes of the polygons set by
-    set_polygons(). Then it checks which points are inside the polyhedron/constraints.
+    calling this function. This function takes the nodes of the lines/polygons set by
+    set_polygons(). The nodes are subsequently fed to the PorePy-function
+    point_in_polygon() (for 2D) or points_in_polyhedron() (for 3D, found in this file)
+    to find the indices of the cells within the constraints.
 
     Parameters:
         model: The model class.
@@ -650,19 +658,34 @@ def use_constraints_for_inner_domain_cells(model, sd) -> np.ndarray:
     """
     points = sd.cell_centers[: model.nd, :]
 
-    if model.params["grid_type"] == "simplex":
-        all_nodes_of_constraints = np.array(
-            [
-                model._fractures[i].pts
-                for i in model.params["meshing_kwargs"]["constraints"]
-            ]
+    if model.nd == 2:
+        if model.params["grid_type"] == "simplex":
+            all_nodes_of_constraints = np.array(
+                [
+                    model._fractures[i].pts
+                    for i in model.params["meshing_kwargs"]["constraints"]
+                ]
+            )
+        else:
+            c1, c2, c3, c4 = model.set_polygons()
+            all_nodes_of_constraints = np.array([c1, c2, c3, c4])
+        polygon_vertices = all_nodes_of_constraints.T[0]
+        inside = pp.geometry_property_checks.point_in_polygon(polygon_vertices, points)
+        return np.where(inside)[0]
+    elif model.nd == 3:
+        if model.params["grid_type"] == "simplex":
+            all_nodes_of_constraints = np.array(
+                [
+                    model._fractures[i].pts
+                    for i in model.params["meshing_kwargs"]["constraints"]
+                ]
+            )
+        else:
+            all_nodes_of_constraints = model.set_polygons()
+        inside = points_in_polyhedron(
+            points=points, all_nodes_of_constraints=all_nodes_of_constraints
         )
-    else:
-        all_nodes_of_constraints = model.set_polygons()
-    inside = points_in_polyhedron(
-        points=points, all_nodes_of_constraints=all_nodes_of_constraints
-    )
-    return inside
+        return inside
 
 
 def points_in_polyhedron(points, all_nodes_of_constraints):
@@ -688,10 +711,10 @@ def points_in_polyhedron(points, all_nodes_of_constraints):
 
 
 # -------- 9x9 representation of transversely isotropic stiffness tensor
-"""The following functions are used to create a 9x9 matrix representation of a
-transversely isotropic media with an arbitrary symmetry axis. The expression for the
-stiffness tensor is taken from its tensor notation and split into five terms, one per
-material parameter. """
+"""The following functions are used to create a 9x9 matrix representation of the tensor 
+corresponding to a transversely isotropic media with an arbitrary symmetry axis. The
+expression for the stiffness tensor is taken from its tensor notation and split into
+five terms, one per material parameter. """
 
 
 def kronecker_delta(i_ind, j_ind):

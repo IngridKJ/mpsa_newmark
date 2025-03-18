@@ -9,5 +9,3 @@ from .utility_functions import (
 )
 
 from .anisotropy_mixins import TransverselyIsotropicTensorMixin
-
-from .stiffness_tensors import TensorAllowingForCustomFields

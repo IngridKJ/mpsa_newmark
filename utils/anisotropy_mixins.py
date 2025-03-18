@@ -1,4 +1,4 @@
-"""File for anisotropic stiffness tensor mixins."""
+"""File for anisotropic stiffness tensor mixin."""
 
 import numpy as np
 import porepy as pp
@@ -6,22 +6,41 @@ from utils.utility_functions import (
     use_constraints_for_inner_domain_cells,
     create_stiffness_tensor_basis,
 )
-from utils.stiffness_tensors import TensorAllowingForCustomFields
 
 
 class TransverselyIsotropicTensorMixin:
-    def stiffness_tensor(self, subdomain: pp.Grid):
-        """Compute the stiffness tensor for a given subdomain."""
+    """Mixin which defines a tensor with (possibly) heterogeneous properties.
+
+    The tensor may be assigned to be anisotropic in the regions identified by
+    use_constraints_for_inner_domain_cells(). The default parameter values for the
+    anisotropic region is however isotropic, so this tensor may also be used in fully
+    isotropic cases.
+
+    NOTE: The utility function use_constraints_for_inner_domain_cells() used hereing
+    assumes existence of "constraints" within the domain. For simplex grids that means
+    constraints which influence the meshing, while for Cartesian grids it means polygons
+    which are just used to determine what is part of the "inner" domain and what is part
+    of the "outer" domain. The constriants are set by set_fractures() and the polygons
+    are set by set_polygons(). See the function use_constraints_for_inner_domain_cells()
+    and its documentation for further details.
+
+    """
+
+    def stiffness_tensor(self, subdomain: pp.Grid) -> pp.FourthOrderTensor:
+        """Compute the stiffness tensor for a given subdomain.
+
+        Parameters:
+            subdomain: The subdomain we compute the stiffness tensor for.
+
+        Returns:
+            The stiffness tensor.
+
+        """
         # Fetch inner domain indices
         inner_cell_indices = use_constraints_for_inner_domain_cells(
             model=self,
             sd=subdomain,
         )
-
-        try:
-            h = self.heterogeneity_factor
-        except AttributeError:
-            h = 1
 
         # Preparing basis arrays for inner and outer domains
         inner = np.zeros(subdomain.num_cells)
@@ -47,7 +66,8 @@ class TransverselyIsotropicTensorMixin:
         mu_parallel_mat = stiffness_matrices["mu_parallel"]
         mu_orthogonal_mat = stiffness_matrices["mu_perpendicular"]
 
-        # Extract individual constants from the anisotropy constants dictionary
+        # Extract individual constants from the anisotropy constants dictionary. The
+        # default here is set according to an isotropic tensor.
         anisotropy_constants = self.params.get(
             "anisotropy_constants",
             {
@@ -59,11 +79,11 @@ class TransverselyIsotropicTensorMixin:
             },
         )
 
-        volumetric_compr_lambda = anisotropy_constants["volumetric_compr_lambda"] * h
-        lambda_parallel = anisotropy_constants["lambda_parallel"] * h
-        lambda_orthogonal = anisotropy_constants["lambda_orthogonal"] * h
-        mu_parallel = anisotropy_constants["mu_parallel"] * h
-        mu_orthogonal = anisotropy_constants["mu_orthogonal"] * h
+        volumetric_compr_lambda = anisotropy_constants["volumetric_compr_lambda"]
+        mu_parallel = anisotropy_constants["mu_parallel"]
+        mu_orthogonal = anisotropy_constants["mu_orthogonal"]
+        lambda_parallel = anisotropy_constants["lambda_parallel"]
+        lambda_orthogonal = anisotropy_constants["lambda_orthogonal"]
 
         # Standard material values: assigned to the outer domain
         lmbda = self.solid.lame_lambda * outer
@@ -77,7 +97,7 @@ class TransverselyIsotropicTensorMixin:
         lambda_orthogonal_inner = lambda_orthogonal * inner
 
         # Create the final stiffness tensor
-        stiffness_tensor = TensorAllowingForCustomFields(
+        stiffness_tensor = pp.FourthOrderTensor(
             mu=mu,
             lmbda=lmbda,
             other_fields={
