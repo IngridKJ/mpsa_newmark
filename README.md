@@ -9,8 +9,9 @@ That includes:
   (https://github.com/pmgbergen/porepy).
 * Utility material which is used in the various simulations.
 
-Additional material: We have included runscripts for separate space and time
-convergence analyses of MPSA-Newmark with Dirichlet boundary conditions.
+Additional material: We have included runscripts for separate space and time convergence
+analyses of MPSA-Newmark with Dirichlet boundary conditions. These analysis runs are
+available for simplex and Cartesian grids in tree dimensions.
 
 ## How to use:
 A Docker image with the full environment (including PorePy and PETSc) for reproducing
@@ -29,6 +30,9 @@ script after `cd` into the mpsa_newmark directory is as shown in the following:
     runscripts, all simulation runscripts are assigned coarse default parameter values.
     Change the value of `coarse` from `True` to `False` to run simulations that match
     those detailed in the article.
+  * `grid_type`: Some of the convergence analyses are available both for simplex and
+    Cartesian grids. Simply define the variable `grid_type` to be either `"simplex"` or
+    `"cartesian"` to set the grid type of your choice.
   * `save_figure`: This flag is found in runscripts which allow for generating and
     saving figures. Figures are saved in [figures](./convergence_analysis/figures). Change
     `save_figure` from `True` to `False` to not generate and save figures.
@@ -41,21 +45,21 @@ Note that not all the runscripts have have/need all the flags.
 
 ## Verification: Convergence and energy decay analyses
 ### Convergence analysis of MPSA-Newmark
-These convergence analyses are performed with homogeneous Dirichlet conditions on a 3D
-simplex grid. All convergence runscripts generate an output file which contains grid
-size, number of cells, time step size, displacement error and traction error.
+These convergence analyses are performed with homogeneous Dirichlet conditions in 3D.
+All convergence runscripts generate an output file which contains grid size, number of
+cells, time step size, displacement error and traction error.
 
 * Convergence in space and time:
-  * [runscript_space_time_convergence_dirichlet_boundaries](./convergence_analysis/runscript_space_time_convergence_dirichlet_boundaries.py)
+  * [runscript_space_time_convergence_dirichlet_boundaries](./convergence_and_stability_analysis/runscript_space_time_convergence_dirichlet_boundaries.py)
     (this script can also save a figure of the convergence results).
 
 
 * Convergence in space:
-  * [runscript_space_convergence_dirichlet_boundaries](./convergence_analysis/runscript_space_convergence_dirichlet_boundaries.py).
+  * [runscript_space_convergence_dirichlet_boundaries](./convergence_and_stability_analysis/runscript_space_convergence_dirichlet_boundaries.py).
     
 
 * Convergence in time:
-  * [runscript_time_convergence_dirichlet_boundaries](./convergence_analysis/runscript_time_convergence_dirichlet_boundaries.py).
+  * [runscript_time_convergence_dirichlet_boundaries](./convergence_and_stability_analysis/runscript_time_convergence_dirichlet_boundaries.py).
 
     The default parameters run the time convergence analysis with two refinement levels
     and a cell size coarser than ideal. The coarse parameter setting causes the spatial
@@ -63,33 +67,37 @@ size, number of cells, time step size, displacement error and traction error.
     time.
 
 All the runscripts utilize
-[manufactured_solution_dynamic_3D](./convergence_analysis/convergence_analysis_models/manufactured_solution_dynamic_3D.py)
+[manufactured_solution_dynamic_3D](./convergence_and_stability_analysis/analysis_models/manufactured_solution_dynamic_3D.py)
 as the manufactured solution setup.
 
 ### Convergence analysis of MPSA-Newmark with absorbing boundaries
-Convergence of the solution is performed in a quasi-1D setting. We have performed a
-convergence analysis with successive refinemenet in both space and time. The script
-generates a file with displacement and traction errors in the [convergence analysis results](./convergence_analysis/convergence_analysis_results/) directory, as well as a convergence plot of the
-results:
-  * [runscript_space_time_convergence_absorbing_boundaries](./convergence_analysis/runscript_space_time_convergence_absorbing_boundaries.py).
+Convergence of the solution is performed in isotropic, anisotropic, homogeneous and
+heterogeneous media. We have performed a convergence analysis with successive
+refinemenet in both space and time. The script generates a file with displacement and
+traction errors in the [convergence analysis
+results](./convergence_analysis/convergence_analysis_results/) directory, as well as a
+convergence plot of the results:
+  * [runscript_space_time_convergence_absorbing_boundaries](./convergence_and_stability_analysis/runscript_space_time_convergence_absorbing_boundaries.py).
 
 
 The runscript utilizes
-[model_convergence_ABC](./convergence_analysis/convergence_analysis_models/model_convergence_ABC.py)
+[model_convergence_ABC](./convergence_and_stability_analysis/analysis_models/model_convergence_ABC.py)
 as the model class setup. 
 
 ### Energy decay analysis of MPSA-Newmark with absorbing boundaries
 The energy decay analysis is performed both for successive refinement of the grid, as
 well as for varying wave incidence angles. In both cases the kinetic energy values for
 each time step in each simulation are saved in files within the directory
-[energy_values](./convergence_analysis/energy_values/).
+[energy_values](./convergence_and_stability_analysis/energy_values/).
 
 Grid refinement:
-* [runscript_energy_decay_space_refinement](./convergence_analysis/runscript_energy_decay_space_refinement.py).
+* [runscript_energy_decay_space_refinement](./convergence_and_stability_analysis/runscript_energy_decay_space_refinement.py).
 
 
 Varying the wave incidence angle, $\theta$:
-* [runscript_energy_decay_vary_theta](./convergence_analysis/runscript_energy_decay_vary_theta.py).
+* [runscript_energy_decay_vary_theta](./convergence_and_stability_analysis/runscript_energy_decay_vary_theta.py).
+
+Both these runscripts utilize [model_energy_decay_analysis](./convergence_and_stability_analysis/analysis_models/model_energy_decay_analysis.py) as the model class setup.
 
 ## Results: Simulation examples
 Simulation example runscripts are found within a dedicated [example
