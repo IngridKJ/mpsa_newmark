@@ -22,7 +22,9 @@ class SolutionStrategyAssembleLinearSystemOnce:
     def assemble_linear_system(self) -> None:
         """Assemble the linearized system and store it in :attr:`linear_system`.
 
-        The linear system is defined by the current state of the model.
+        The linear system is defined by the current state of the model at the first time
+        step. The problem is linear, and thus we only need to assemble the Jacobian
+        once.
 
         """
         t_0 = time.time()
