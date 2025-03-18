@@ -14,8 +14,6 @@ axis.
 
 """
 
-from typing import Optional, Union
-
 import numpy as np
 import porepy as pp
 import sympy as sym
