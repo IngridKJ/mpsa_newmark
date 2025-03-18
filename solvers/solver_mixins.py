@@ -29,8 +29,25 @@ logger = logging.getLogger(__name__)
 
 class CustomSolverMixin:
     def solve_linear_system(self) -> np.ndarray:
-        """After calling the parent method, the global solution is calculated by Schur
-        expansion."""
+        """Solve the linear system using PETSc (if available) or a fallback solver.
+
+        This method fetches or assembles the system matrix and residual vector, then
+        solves the linear system using either:
+            * PETSc with GAMG preconditioning (if `petsc_solver_q` is enabled and
+            `petsc4py` is available).
+            * A direct solver (e.g., PyPardiso or SciPy sparse solver) otherwise.
+
+        The method also performs memory cleanup after solving to avoid excessive RAM
+        usage.
+
+        Returns:
+            The computed solution vector.
+
+        Raises:
+            ImportError: If PETSc is selected but `petsc4py` is not installed.
+            AttributeError: If required system attributes are missing.
+
+        """
         import time
 
         petsc_solver_q = self.params.get("petsc_solver_q", False)
@@ -73,6 +90,12 @@ class CustomSolverMixin:
             ksp.solve(b, x)
 
             sol = x.array
+
+            # Free up memory
+            x.destroy()
+            b.destroy()
+            jac_g.destroy()
+            ksp.destroy()
 
         else:
             try:
