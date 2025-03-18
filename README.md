@@ -21,7 +21,7 @@ the results in the article is available on Zenodo
 * All scripts should be run from the mpsa_newmark directory. An example of how to run a
 script after `cd` into the mpsa_newmark directory is as shown in the following:
 
-  `python convergence_analysis/runscript_energy_decay_vary_theta.py`
+  `python convergence_and_stability_analysis/runscript_energy_decay_vary_theta.py`
 
 * There are certain boolean flags to adapt the simulations and outputs of the simulation
   runscripts:
