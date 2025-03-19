@@ -45,28 +45,12 @@ Note that not all the runscripts have have/need all the flags.
 
 ## Verification: Convergence and energy decay analyses
 ### Convergence analysis of MPSA-Newmark
-These convergence analyses are performed with homogeneous Dirichlet conditions in 3D.
-All convergence runscripts generate an output file which contains grid size, number of
-cells, time step size, displacement error and traction error.
+The convergence analysis is performed with homogeneous Dirichlet conditions in 3D. The
+convergence runscript generate an output file which contains grid size, number of cells,
+time step size, displacement error and traction error:
+* [runscript_space_time_convergence_dirichlet_boundaries](./convergence_and_stability_analysis/runscript_space_time_convergence_dirichlet_boundaries.py)
 
-* Convergence in space and time:
-  * [runscript_space_time_convergence_dirichlet_boundaries](./convergence_and_stability_analysis/runscript_space_time_convergence_dirichlet_boundaries.py)
-    (this script can also save a figure of the convergence results).
-
-
-* Convergence in space:
-  * [runscript_space_convergence_dirichlet_boundaries](./convergence_and_stability_analysis/runscript_space_convergence_dirichlet_boundaries.py).
-    
-
-* Convergence in time:
-  * [runscript_time_convergence_dirichlet_boundaries](./convergence_and_stability_analysis/runscript_time_convergence_dirichlet_boundaries.py).
-
-    The default parameters run the time convergence analysis with two refinement levels
-    and a cell size coarser than ideal. The coarse parameter setting causes the spatial
-    error to dominate, and we do therefore not observe the second order convergence in
-    time.
-
-All the runscripts utilize
+The runscript utilizes
 [manufactured_solution_dynamic_3D](./convergence_and_stability_analysis/analysis_models/manufactured_solution_dynamic_3D.py)
 as the manufactured solution setup.
 
