@@ -65,7 +65,6 @@ anisotropy_coefficients = [
     0,
     # Anisotropic case
     1e1,
-    1e2,
 ]
 
 for heterogeneity_factor_index in range(0, len(heterogeneity_coefficients)):
