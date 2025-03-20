@@ -34,20 +34,21 @@ script after `cd` into the mpsa_newmark directory is as shown in the following:
     Cartesian grids. Simply define the variable `grid_type` to be either `"simplex"` or
     `"cartesian"` to set the grid type of your choice.
   * `save_figure`: This flag is found in runscripts which allow for generating and
-    saving figures. Figures are saved in [figures](./convergence_analysis/figures). Change
-    `save_figure` from `True` to `False` to not generate and save figures.
+    saving figures. Figures are saved in
+    [figures](./convergence_and_stability_analysis/figures). Change `save_figure` from
+    `True` to `False` to not generate and save figures.
   * `limit_file_export`: Certain runscripts generate large amounts of vtu and pvd files.
     Default behavior is to generate files for each time step. This flag allows to only
     generate files for the time steps which are presented in the article. Change
     `limit_file_export` from `False` to `True` to limit the number of files exported.
 
-Note that not all the runscripts have have/need all the flags.
+Note that not all the runscripts have/need all the flags.
 
 ## Verification: Convergence and energy decay analyses
 ### Convergence analysis of MPSA-Newmark
 The convergence analysis is performed with homogeneous Dirichlet conditions in 3D. The
-convergence runscript generate an output file which contains grid size, number of cells,
-time step size, displacement error and traction error:
+convergence runscript generates an output file which contains grid size, number of cells,
+time step size, displacement error and traction error, as well as a figure with the results:
 * [runscript_space_time_convergence_dirichlet_boundaries](./convergence_and_stability_analysis/runscript_space_time_convergence_dirichlet_boundaries.py)
 
 The runscript utilizes
@@ -59,8 +60,8 @@ Convergence of the solution is performed in isotropic, anisotropic, homogeneous 
 heterogeneous media. We have performed a convergence analysis with successive
 refinemenet in both space and time. The script generates a file with displacement and
 traction errors in the [convergence analysis
-results](./convergence_analysis/convergence_analysis_results/) directory, as well as a
-convergence plot of the results:
+results](./convergence_and_stability_analysis/convergence_analysis_results) directory,
+as well as a convergence plot of the results:
   * [runscript_space_time_convergence_absorbing_boundaries](./convergence_and_stability_analysis/runscript_space_time_convergence_absorbing_boundaries.py).
 
 
