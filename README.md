@@ -47,8 +47,9 @@ Note that not all the runscripts have/need all the flags.
 ## Verification: Convergence and energy decay analyses
 ### Convergence analysis of MPSA-Newmark
 The convergence analysis is performed with homogeneous Dirichlet conditions in 3D. The
-convergence runscript generates an output file which contains grid size, number of cells,
-time step size, displacement error and traction error, as well as a figure with the results:
+convergence runscript generates an output file which contains grid size, number of
+cells, time step size, displacement error and traction error, as well as a figure with
+the results:
 * [runscript_space_time_convergence_dirichlet_boundaries](./convergence_and_stability_analysis/runscript_space_time_convergence_dirichlet_boundaries.py)
 
 The runscript utilizes
