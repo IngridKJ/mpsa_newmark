@@ -30,8 +30,9 @@ os.makedirs(output_dir, exist_ok=True)
 
 filename = os.path.join(output_dir, filename)
 
-# Coarse/Fine variables, grid type (either "simplex" or "cartesian") and plotting (save
-# figure)
+# Run two refinement levels (coarse = True) or four refinement levels (coarse = False).
+# grid_type can be chosen either "simplex" or "cartesian" and figure is saved by setting
+# save_figure = True.
 coarse = True
 grid_type = "simplex"
 save_figure = True
