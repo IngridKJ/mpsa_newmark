@@ -16,7 +16,7 @@ available for simplex and Cartesian grids in tree dimensions.
 ## How to use:
 A Docker image with the full environment (including PorePy and PETSc) for reproducing
 the results in the article is available on Zenodo
-[here](https://doi.org/10.5281/zenodo.13861514).
+[here](https://doi.org/10.5281/zenodo.15056461).
 
 * All scripts should be run from the mpsa_newmark directory. An example of how to run a
 script after `cd` into the mpsa_newmark directory is as shown in the following:
