@@ -14,14 +14,15 @@ import porepy as pp
 sys.path.append("../")
 import run_models.run_linear_model as rlm
 from models.elastic_wave_equation_abc_linear import DynamicMomentumBalanceABCLinear
-from utils import TransverselyIsotropicStiffnessTensor
+from utils.anisotropy_mixins import TransverselyIsotropicTensorMixin
 
-# Coarse/Fine variables
+# Coarse/Fine variables: coarse = True gives a coarser grid and coarse = False gives a
+# finer grid.
 coarse = True
 
 # Only export visualization files corresponding to the ones visualized in the article:
-limit_file_export = False
-times_in_article = [0.05, 0.1]
+limit_file_export = True
+times_in_article = [0.05, 0.125]
 
 
 class Geometry:
@@ -43,16 +44,60 @@ class Geometry:
         mesh_args: dict[str, float] = {"cell_size": cell_size}
         return mesh_args
 
+    def set_polygons(self):
+        west = np.array(
+            [
+                [0.25, 0.25, 0.25, 0.25],
+                [0.25, 0.75, 0.75, 0.25],
+                [0.25, 0.25, 0.75, 0.75],
+            ]
+        )
+        east = np.array(
+            [
+                [0.75, 0.75, 0.75, 0.75],
+                [0.25, 0.75, 0.75, 0.25],
+                [0.25, 0.25, 0.75, 0.75],
+            ]
+        )
+        south = np.array(
+            [
+                [0.25, 0.75, 0.75, 0.25],
+                [0.25, 0.25, 0.25, 0.25],
+                [0.25, 0.25, 0.75, 0.75],
+            ]
+        )
+        north = np.array(
+            [
+                [0.25, 0.75, 0.75, 0.25],
+                [0.75, 0.75, 0.75, 0.75],
+                [0.25, 0.25, 0.75, 0.75],
+            ]
+        )
+        bottom = np.array(
+            [
+                [0.25, 0.75, 0.75, 0.25],
+                [0.25, 0.25, 0.75, 0.75],
+                [0.25, 0.25, 0.25, 0.25],
+            ]
+        )
+        top = np.array(
+            [
+                [0.25, 0.75, 0.75, 0.25],
+                [0.25, 0.25, 0.75, 0.75],
+                [0.75, 0.75, 0.75, 0.75],
+            ]
+        )
+        return west, east, south, north, bottom, top
+
 
 class ModelSetupSourceInInnerDomain(
     Geometry,
-    TransverselyIsotropicStiffnessTensor,
+    TransverselyIsotropicTensorMixin,
     DynamicMomentumBalanceABCLinear,
 ):
     def initial_velocity(self, dofs: int) -> np.ndarray:
         """Initial velocity values."""
         sd = self.mdg.subdomains()[0]
-        t = self.time_manager.time
 
         x = sd.cell_centers[0, :]
         y = sd.cell_centers[1, :]
@@ -64,15 +109,12 @@ class ModelSetupSourceInInnerDomain(
         lam = 0.125
 
         common_part = theta * np.exp(
-            -np.pi**2 * ((x - 0.5) ** 2 + (y - 0.5) ** 2 + (z - 0.5) ** 2) / lam**2
+            -(np.pi**2) * ((x - 0.5) ** 2 + (y - 0.5) ** 2 + (z - 0.5) ** 2) / lam**2
         )
 
         vals[0] = common_part * (x - 0.5)
-
         vals[1] = common_part * (y - 0.5)
-
         vals[2] = common_part * (z - 0.5)
-
         return vals.ravel("F")
 
 
@@ -102,8 +144,7 @@ params = {
     "manufactured_solution": "simply_zero",
     "anisotropy_constants": anisotropy_constants,
     "progressbars": True,
-    "inner_domain_width": 0.5,
-    "inner_domain_center": (0.5, 0.5, 0.5),
+    "petsc_solver_q": True,
     # A value of None for times_to_export means that visualization files for all time
     # steps are created and exported.
     "times_to_export": times_in_article if limit_file_export else None,

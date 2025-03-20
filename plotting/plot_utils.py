@@ -52,8 +52,7 @@ def fetch_numbers_from_file(file_path: str) -> dict:
         Line 3: num num num num ...
         ...
 
-    Besides that, if there are any hashtags or commas in the file, these are ignored.
-    The numbers are stored as values in a dictionary with their header as key.
+    Besides that, if there are any hashtags or commas in the file, these are ignored. The numbers are stored as values in a dictionary with their header as key.
 
     Parameters:
         file_path: Path to file/filename.
