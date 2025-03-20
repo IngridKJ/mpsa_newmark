@@ -17,7 +17,10 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 output_dir = os.path.join(script_dir, folder_name)
 os.makedirs(output_dir, exist_ok=True)
 
-# Coarse/Fine variables and plotting (save figure)
+# Choose between coarse or fine variables: coarse = True gives a larger cell size, while
+# coarse = False gives a smaller cell size and thus a more refined grid.
+# Plotting: save_figure = True saves the figure, and save_figure = False does not save
+# any figure.
 coarse = True
 save_figure = True
 

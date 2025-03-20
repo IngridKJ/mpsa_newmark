@@ -16,7 +16,8 @@ import run_models.run_linear_model as rlm
 from models.elastic_wave_equation_abc_linear import DynamicMomentumBalanceABCLinear
 from utils.anisotropy_mixins import TransverselyIsotropicTensorMixin
 
-# Coarse/Fine variables
+# Coarse/Fine variables: coarse = True gives a coarser grid and coarse = False gives a
+# finer grid.
 coarse = True
 
 # Only export visualization files corresponding to the ones visualized in the article:

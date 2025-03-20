@@ -23,8 +23,8 @@ output_dir = os.path.join(script_dir, folder_name)
 os.makedirs(output_dir, exist_ok=True)
 
 # Run three refinement levels (coarse = True) or five refinement levels (coarse =
-# False), and whether the figure should be saved or not:
-coarse = False
+# False), and choose whether the figure should be saved (True) or not (False).
+coarse = True
 save_figure = True
 
 

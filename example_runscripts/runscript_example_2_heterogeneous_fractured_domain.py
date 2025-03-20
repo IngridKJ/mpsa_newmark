@@ -19,7 +19,8 @@ from utils.discard_equations_mixins import RemoveFractureRelatedEquationsMomentu
 
 logger = logging.getLogger(__name__)
 
-# Coarse/Fine variables
+# Coarse/Fine variables: coarse = True gives a coarser grid and coarse = False gives a
+# finer grid.
 coarse = True
 
 # Only export visualization files corresponding to the ones visualized in the article:

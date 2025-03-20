@@ -16,8 +16,10 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 output_dir = os.path.join(script_dir, folder_name)
 os.makedirs(output_dir, exist_ok=True)
 
-# Coarse/Fine variables and plotting (save figure)
-coarse = False
+# Run two refinement levels (coarse = True) or five refinement levels (coarse = False).
+# Decide  whether the figure should be saved (save_figure = True) or not (save_figure =
+# False).
+coarse = True
 save_figure = True
 
 
